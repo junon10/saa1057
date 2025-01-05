@@ -2,7 +2,8 @@
 
 <h2>Descrição</h2>
 
-<p>Biblioteca Arduino para controlar o circuito integrado PLL SAA1057. Fornece funções para configurar e operar o dispositivo.</p>
+<p>Biblioteca Arduino para controlar o circuito integrado PLL SAA1057.<br>
+Fornece funções para configurar e operar o dispositivo.</p>
 
 <h2>Requisitos</h2>
 
