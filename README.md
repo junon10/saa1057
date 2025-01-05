@@ -76,7 +76,8 @@ pll.commitConfig();</p>
 
 <h2>Contribuição</h2>
 
-<p>Contribuições são bem-vindas! Envie um pull request.</p>
+<p>Contribuições são bem-vindas!<br>
+Envie um pull request.</p>
 
 <h2>Licença</h2>
 
