@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.6
-  Date: 2024/05/28
+  Version: 1.0.7
+  Date: 2025/01/09
   Author: Junon M
 */
 
@@ -10,6 +10,12 @@
 
 
 SAA1057::SAA1057() {
+
+  // Default config for dip switch pins (0 to 7)
+  for (int i = 0; i < SW_NUM_BITS; i++) _sw_pins[i] = i;
+
+  _dip_sw_value = 0;
+
   WordB = 0;
   WordA = 0;
   _Freq_Shift = 0; 
@@ -46,6 +52,23 @@ void SAA1057::begin(const uint8_t clock_pin, const uint8_t data_pin, const uint8
   digitalWrite(_data_pin, LOW);
 }
 
+
+
+void SAA1057::setDipSwPinout(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4, 
+const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0) 
+{
+_sw_pins[7] = b7;
+_sw_pins[6] = b6;
+_sw_pins[5] = b5;
+_sw_pins[4] = b4;
+_sw_pins[3] = b3;
+_sw_pins[2] = b2;
+_sw_pins[1] = b1;
+_sw_pins[0] = b0;
+
+for (int i = 0; i < SW_NUM_BITS; i++) pinMode(_sw_pins[i], INPUT_PULLUP);
+
+}
 
 
 
@@ -171,6 +194,17 @@ void SAA1057::setFrequency(float Frequency, uint16_t Speed)
 }
 
 
+void SAA1057::setFrequencyByDipSW(uint16_t Speed)
+{
+  for (int i = 0; i < SW_NUM_BITS; i++)
+  {
+    _dip_sw_value = bitWrite(_dip_sw_value, i, !digitalRead(_sw_pins[i])); 
+  }
+
+  float freq = FACTOR - _dip_sw_value;
+  freq *= 10;
+  SAA1057::setFrequency(freq, Speed);
+}
 
 
 void SAA1057::commitConfig()

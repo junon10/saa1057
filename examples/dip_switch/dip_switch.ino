@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.6
-  Date: 2024/05/28
+  Version: 1.0.7
+  Date: 2025/01/09
   Author: Junon M
   Hardware: Arduino Uno or Nano with DipSwitch
 */
@@ -9,7 +9,7 @@
 #include "SAA1057.h"
 
 //---------------------------------------------------
-// Ajuste de FI (Frequencia Intermediária)
+// FI adjust (intermediate frequency adjust)
 //---------------------------------------------------
 // 0.0 MHz, 10.7 MHz, -10.7 MHz
 const float IF_Frequency = 0.0f; 
@@ -23,19 +23,6 @@ const int SAA_DATA_PIN  = 11;
 const int SAA_DLEN_PIN  = 12;
 //---------------------------------------------------
 
-//---------------------------------------------------
-// DipSwitch Pino 0 ao Pino 7 do Arduino
-//---------------------------------------------------
-const int KEYS_START_PIN = 0;
-//---------------------------------------------------
-
-//---------------------------------------------------
-// Não alterar
-//---------------------------------------------------
-const uint16_t Factor = 1080;
-//---------------------------------------------------
-
-
 SAA1057 pll;
 
 void setup() {
@@ -46,7 +33,8 @@ void setup() {
   Serial.println("PLL SAA1057");
   Serial.println();
 
-  for (int i = KEYS_START_PIN; i < (KEYS_START_PIN + 8); i++) pinMode(i, INPUT_PULLUP);
+  // DipSwitch Arduino pinout 
+  pll.setDipSwPinout(7,6,5,4,3,2,1,0);
    
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
@@ -63,21 +51,11 @@ void setup() {
   
   pll.setFreqShift(/* Frequência Intermediária em MHz */ IF_Frequency);
 
-  //===========================================================================
-  // Cálculo da frequência com base na dip switch
-  //===========================================================================
-  uint16_t Keys = 0, Frequency = 0;
-  
-  for (int i = KEYS_START_PIN; i < (KEYS_START_PIN + 8); i++) if (digitalRead(i) == LOW) Keys = bitSet(Keys, i);
-  Frequency = Factor - Keys;
-  Frequency *= 10;
-  //===========================================================================
-
   // Correntes dimensionadas para transmissores fm
   //
-  pll.setFrequency(/* Frequência em MHz */ Frequency, /* Corrente no detector de fase */ CP_07); // Ex: 101,50Mhz = 10150
+  pll.setFrequencyByDipSW(/* Corrente no detector de fase */ CP_07);
   delay(2000);
-  pll.setFrequency(/* Frequência em MHz */ Frequency, /* Corrente no detector de fase */ CP_007);
+  pll.setFrequencyByDipSW(/* Corrente no detector de fase */ CP_007);
 }
 
 

@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.6
-  Date: 2024/05/28
+  Version: 1.0.7
+  Date: 2025/01/09
   Author: Junon M
 */
 
@@ -82,12 +82,20 @@
 //==============================================================================
 
 
+#define FACTOR        1080
+#define SW_NUM_BITS      8
+
+
 class SAA1057
 {
   private:
     uint16_t WordA, WordB;
 
     uint8_t _clock_pin, _data_pin, _dlen_pin;
+
+    uint8_t _dip_sw_value;
+
+    uint8_t _sw_pins[8]; 
     
     float _Freq_Shift;
     
@@ -111,6 +119,9 @@ class SAA1057
     //
     void setFreqShift(float MHz);
 
+    void setDipSwPinout(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4, 
+    const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0);
+
     void set(uint16_t Data, uint16_t Shl);
 
     void clear(uint16_t Data, uint16_t Shl);
@@ -120,6 +131,8 @@ class SAA1057
     void setDefaultConfig();
     
     void setFrequency(float Frequency, uint16_t Speed);
+
+    void setFrequencyByDipSW(uint16_t Speed);
 
     void commitConfig();
 };
