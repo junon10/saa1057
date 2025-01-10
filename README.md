@@ -62,7 +62,7 @@ pll.setFrequencyByDipSW(Speed);</p>
 - Junon M.
 
 ## Repositório
-[Meu Repositório](https://github.com/junon10/saa1057)
+[https://github.com/junon10/saa1057](https://github.com/junon10/saa1057)
 
 ## Licença
 
