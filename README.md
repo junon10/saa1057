@@ -1,98 +1,86 @@
-<h2>SAA1057 PLL Controller Library</h2>
+## SAA1057 PLL Controller Library
 
-<h2>Descrição</h2>
+## Descrição
 
-<p>Biblioteca Arduino para controlar o circuito integrado PLL SAA1057.<br>
-Fornece funções para configurar e operar o dispositivo.</p>
+- Biblioteca Arduino para controlar o circuito integrado PLL SAA1057.<br>
+Fornece funções para configurar e operar o dispositivo.<br>
 
-<h2>Requisitos</h2>
+## Requisitos
 
-<p>- Arduino IDE<br>
+- Arduino IDE
 - Esta biblioteca é compatível com a maioria das placas Arduino.<br>
-- Circuito integrado SAA1057.</p>
+- Circuito integrado SAA1057.<br>
 
-<h2>Instalação</h2>
+## Instalação
 
-<p>
-1. Baixe a biblioteca.<br>
-2. Instale via Arduino IDE: Sketch > Incluir Biblioteca > Adicionar Biblioteca...</p>
+- Baixe a biblioteca.<br>
+- Instale via Arduino IDE: Sketch > Incluir Biblioteca > Adicionar Biblioteca...<br>
 
-<h2>Uso</h2>
+## Uso
 
-<p>Exemplo</p>
+```c++
+#include <SAA1057.h>
 
-<p>#include <SAA1057.h></p>
+/* Declaração do objeto pll */
+SAA1057 pll;
 
-<p>SAA1057 pll;</p>
-
-<p>Métodos e Configurações</p>
-
-<p>
-Define os 3 pinos de conexão do Arduino com o PLL<br>
-pll.begin(clock_pin, data_pin, dlen_pin);</p>
+/* Define os 3 pinos de conexão do Arduino com o PLL */
+pll.begin(clock_pin, data_pin, dlen_pin);
         
-<p>
-1. pll.setFreqShift(10.7); // = Receptor FM (F + 10,7MHz)<br>
-2. pll.setFreqShift(0); // = Transmissor FM (F + 0)<br>
-3. pll.setFreqShift(-10.7); // = Receptor FM (F - 10,7MHz)<br>
-pll.setFreqShift(float MHz);</p>
+/* Receptor FM (F + 10,7MHz)
+   Transmissor FM (F + 0)
+   Receptor FM (F - 10,7MHz) */
+pll.setFreqShift(float MHz);
 
-<p>
-Força os bits da variável (Data) para 1(um), e a envia à WordB, iniciando no bit determinado por Shl = ShiftLeft (deslocamento para a esquerda), conforme as informações do arquivo .h<br>
-- pll.set(uint16_t Data, uint16_t Shl);</p>
+/* Força os bits da variável (Data) para 1(um), e a envia à WordB, iniciando no bit determinado por Shl = ShiftLeft (deslocamento para a esquerda), conforme as informações do arquivo .h */
+pll.set(uint16_t Data, uint16_t Shl);
 
-<p>
-Força os bits da variável (Data) para 0(zero)<br>
-- pll.clear(uint16_t Data, uint16_t Shl);</p>
+/* Força os bits da variável (Data) para 0(zero) */
+pll.clear(uint16_t Data, uint16_t Shl);
     
-<p>
-Teste do PLL SAA1057 em 100MHz<br>
-- pll.setDefaultConfig();</p>
+/* Teste do PLL SAA1057 em 100MHz */
+pll.setDefaultConfig();
     
-<p>
-Define a frequência de operação e consequentemente a velocidade de travamento do pll (corrente no Loop Filter).<br>
-- pll.setFrequency(float Frequency, uint16_t Speed);</p>
+/* Define a frequência de operação e consequentemente a velocidade de travamento do pll (corrente no Loop Filter).*/
+pll.setFrequency(float Frequency, uint16_t Speed);
 
-<p>
-Efetiva as mudanças de configuração.<br>
-- pll.commitConfig();</p>
+/* Efetiva as mudanças de configuração. */
+pll.commitConfig();
 
-<p>
-Configuração de pinagem da DipSwitch.<br>
-- pll.setDipSwPinout(b7, b6, b5, b4, b3, b2, b1, b0);</p>
+/* Configuração de pinagem da DipSwitch. */
+pll.setDipSwPinout(b7, b6, b5, b4, b3, b2, b1, b0);
 
-<p>
-Define a frequência baseada na DipSwitch.<br>
-- pll.setFrequencyByDipSW(Speed);</p>
+/* Define a frequência baseada na DipSwitch. */
+pll.setFrequencyByDipSW(Speed);</p>
+```
 
-<h2>Limitações</h2>
+## Limitações
 
-<p>
-- Consulte o datasheet do SAA1057 para detalhes técnicos.</p>
+- Consulte o datasheet do SAA1057 para detalhes técnicos.<br>
 
-<h2>Autor</h2>
-<p>Junon M.</p>
+## Autor
+- Junon M.
 
-<h2>Repositório</h2>
-<p>https://github.com/junon10/saa1057</p>
+## Repositório
+[Meu Repositório](https://github.com/junon10/saa1057)
 
-<h2>Contribuição</h2>
+## Licença
 
-<p>Contribuições são bem-vindas!<br>
-Envie um pull request.</p>
+- GPL-3.0
 
-<h2>Licença</h2>
+## Contribuição
 
-<p>GPL-3.0</p>
+- Contribuições são bem-vindas! Envie um pull request.
 
-<h2>Referências</h2>
+## Referências
 
-<p>
 - Datasheet SAA1057<br>
-- Documentação Arduino</p>
+- Documentação Arduino<br>
 
-<h2>Changelog</h2>
+## Log de Alterações
 
-<p>-1.0.6 - Commit inicial.</p>
+### 2024/06/15 - v1.0.6  
+- Commit inicial.<br>
 
-<p>-1.0.7 - Definição de frequência por DipSwitch já integrada nesta biblioteca.</p>
+### 2025/01/09 - v1.0.7  
+- Definição de frequência por DipSwitch já integrada nesta biblioteca.<br>
