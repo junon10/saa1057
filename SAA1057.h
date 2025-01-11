@@ -132,7 +132,7 @@ class SAA1057
     
     void setFrequency(float Frequency, uint16_t Speed);
 
-    void setFrequencyByDipSW(uint16_t Speed);
+    void setFrequencyByDipSw(uint16_t Speed);
 
     void commitConfig();
 };

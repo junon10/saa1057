@@ -53,9 +53,9 @@ void setup() {
 
   // Correntes dimensionadas para transmissores fm
   //
-  pll.setFrequencyByDipSW(/* Corrente no detector de fase */ CP_07);
+  pll.setFrequencyByDipSw(/* Corrente no detector de fase */ CP_07);
   delay(2000);
-  pll.setFrequencyByDipSW(/* Corrente no detector de fase */ CP_007);
+  pll.setFrequencyByDipSw(/* Corrente no detector de fase */ CP_007);
 }
 
 

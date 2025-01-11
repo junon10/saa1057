@@ -194,7 +194,7 @@ void SAA1057::setFrequency(float Frequency, uint16_t Speed)
 }
 
 
-void SAA1057::setFrequencyByDipSW(uint16_t Speed)
+void SAA1057::setFrequencyByDipSw(uint16_t Speed)
 {
   for (int i = 0; i < SW_NUM_BITS; i++)
   {
