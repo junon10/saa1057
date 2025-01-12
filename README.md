@@ -51,7 +51,7 @@ pll.commitConfig();
 pll.setDipSwPinout(b7, b6, b5, b4, b3, b2, b1, b0);
 
 /* Define a frequência baseada na DipSwitch. */
-pll.setFrequencyByDipSw(Speed);</p>
+pll.setFrequencyByDipSw(Speed);
 ```
 
 ## Limitações
