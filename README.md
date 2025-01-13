@@ -48,7 +48,7 @@ pll.setDefaultConfig();
 /* Define a frequência de operação e 
 consequentemente a velocidade de travamento 
 do pll (corrente no Loop Filter).*/
-pll.setFrequency(float Frequency, uint16_t Speed);
+pll.setFrequency(float MHz, uint16_t Speed);
 
 /* Efetiva as mudanças de configuração. */
 pll.commitConfig();
