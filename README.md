@@ -14,7 +14,8 @@ Fornece funções para configurar e operar o dispositivo.<br>
 ## Instalação
 
 - Baixe a biblioteca.<br>
-- Instale via Arduino IDE: Sketch > Incluir Biblioteca > Adicionar Biblioteca...<br>
+- Instale via Arduino IDE:<br> 
+Sketch > Incluir Biblioteca > Adicionar Biblioteca...<br>
 
 ## Uso
 
@@ -32,7 +33,10 @@ pll.begin(clock_pin, data_pin, dlen_pin);
    Receptor FM (F - 10,7MHz) */
 pll.setFreqShift(float MHz);
 
-/* Força os bits da variável (Data) para 1(um), e a envia à WordB, iniciando no bit determinado por Shl = ShiftLeft (deslocamento para a esquerda), conforme as informações do arquivo .h */
+/* Força os bits da variável (Data) para 1(um), e
+a envia à WordB, iniciando no bit determinado 
+por Shl = ShiftLeft (deslocamento para a esquerda), 
+conforme as informações do arquivo .h */
 pll.set(uint16_t Data, uint16_t Shl);
 
 /* Força os bits da variável (Data) para 0(zero) */
@@ -41,7 +45,9 @@ pll.clear(uint16_t Data, uint16_t Shl);
 /* Teste do PLL SAA1057 em 100MHz */
 pll.setDefaultConfig();
     
-/* Define a frequência de operação e consequentemente a velocidade de travamento do pll (corrente no Loop Filter).*/
+/* Define a frequência de operação e 
+consequentemente a velocidade de travamento 
+do pll (corrente no Loop Filter).*/
 pll.setFrequency(float Frequency, uint16_t Speed);
 
 /* Efetiva as mudanças de configuração. */
@@ -86,5 +92,5 @@ pll.setFrequencyByDipSw(Speed);
 - Definição de frequência por DipSwitch já integrada nesta biblioteca.<br>
 
 ### 2025/01/13 - v1.0.8
-- Corrigido bug de decodificação da DipSwitch
+- Corrigido bug de decodificação da DipSwitch.<br>
 
