@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.7
-  Date: 2025/01/09
+  Version: 1.0.8
+  Date: 2025/01/13
   Author: Junon M
 */
 
@@ -179,11 +179,11 @@ void SAA1057::setDefaultConfig()
 
 
 
-void SAA1057::setFrequency(float Frequency, uint16_t Speed)
+void SAA1057::setFrequency(float MHz, uint16_t Speed)
 {
   float freq;
   
-  freq = Frequency;
+  freq = MHz;
   freq += _Freq_Shift;
   WordA = round(freq * 100);
 
@@ -201,8 +201,9 @@ void SAA1057::setFrequencyByDipSw(uint16_t Speed)
     _dip_sw_value = bitWrite(_dip_sw_value, i, !digitalRead(_sw_pins[i])); 
   }
 
+  // freq = 1080 - 255; // = 825
   float freq = FACTOR - _dip_sw_value;
-  freq *= 10;
+  freq /= 10; // = 82,5 MHz;
   SAA1057::setFrequency(freq, Speed);
 }
 

@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.7
-  Date: 2025/01/09
+  Version: 1.0.8
+  Date: 2025/01/13
   Author: Junon M
   Hardware: Arduino Uno or Nano with DipSwitch
 */

@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.6
-  Date: 2024/05/28
+  Version: 1.0.8
+  Date: 2025/01/13
   Author: Junon M
   Hardware: Arduino Uno and Display module with keypad
 */

@@ -84,3 +84,7 @@ pll.setFrequencyByDipSw(Speed);
 
 ### 2025/01/09 - v1.0.7  
 - Definição de frequência por DipSwitch já integrada nesta biblioteca.<br>
+
+### 2025/01/13 - v1.0.8
+- Corrigido bug de decodificação da DipSwitch
+

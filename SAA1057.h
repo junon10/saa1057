@@ -1,7 +1,7 @@
 /*
   Lib: PLL SAA1057
-  Version: 1.0.7
-  Date: 2025/01/09
+  Version: 1.0.8
+  Date: 2025/01/13
   Author: Junon M
 */
 
@@ -130,7 +130,7 @@ class SAA1057
     //
     void setDefaultConfig();
     
-    void setFrequency(float Frequency, uint16_t Speed);
+    void setFrequency(float MHz, uint16_t Speed);
 
     void setFrequencyByDipSw(uint16_t Speed);
 
