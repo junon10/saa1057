@@ -13,15 +13,15 @@ const char * VERSION = "1.0.8";
 //----------------------------------------------------------------
 // Configuração do menu serial
 //----------------------------------------------------------------
-const char MENU_TEXT_FREQUENCY[] = "Frequency";
-const char INDEX_FREQUENCY[] = "1";
-const float MAX_FREQUENCY = 130.f;
-const float MIN_FREQUENCY = 50.f;
+const char MENU_TEXT_FREQ[] = "Frequency";
+const char INDEX_FREQ[] = "1";
+const float MAX_FREQ = 130.f;
+const float MIN_FREQ = 50.f;
 
-const char MENU_TEXT_IF_FREQUENCY[] = "IF Frequency";
-const char INDEX_IF_FREQUENCY[] = "2";
-const float MAX_IF_FREQUENCY = 10.7f;
-const float MIN_IF_FREQUENCY = -10.7f;
+const char MENU_TEXT_INT_FREQ[] = "Intermediate Frequency";
+const char INDEX_INT_FREQ[] = "2";
+const float MAX_INT_FREQ = 10.7f;
+const float MIN_INT_FREQ = -10.7f;
 
 const int SEP_COUNT = 60;
 //----------------------------------------------------------------
@@ -29,13 +29,13 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 // Frequência inicial padrão
 //----------------------------------------------------------------
-float Frequency = 94.1f; // 100.0 MHz
+float Freq = 94.1f; // 100.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
 // Frequência intermediária para receptor fm +10.7MHz
 //----------------------------------------------------------------
-float IF_Frequency = 10.7f; //  0.0 MHz
+float IntFreq = 10.7f; //  0.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -91,11 +91,11 @@ void loop() {
 
 void commitConfig()
 {
-  pll.setFreqShift(/* Frequência Intermediária em MHz */ IF_Frequency);
+  pll.setFreqShift(/* Frequência Intermediária em MHz */ IntFreq);
 
-  pll.setFrequency(/* Frequência em MHz */ Frequency, /* Corrente no detector de fase */ FAST_TUNE);
+  pll.setFrequency(/* Frequência em MHz */ Freq, /* Corrente no detector de fase */ FAST_TUNE);
   delay(50); // tempo para sintonizar
-  pll.setFrequency(/* Frequência em MHz */ Frequency, /* Corrente no detector de fase */ SLOW_TUNE);
+  pll.setFrequency(/* Frequência em MHz */ Freq, /* Corrente no detector de fase */ SLOW_TUNE);
 }
 
 
@@ -115,8 +115,8 @@ String getCommands()
   msg += Separator(SEP_COUNT);
   msg += "PLL SAA1057\nVersion: " + String(VERSION) + "\n\n";
   msg += "Escolha uma opção:\n\n";
-  msg += String(INDEX_FREQUENCY) + ". " + String(MENU_TEXT_FREQUENCY) + " = " + String(Frequency, 2)  + "MHz\n";
-  msg += String(INDEX_IF_FREQUENCY) + ". " + String(MENU_TEXT_IF_FREQUENCY) + " = " + String(IF_Frequency, 2)  + "MHz\n";
+  msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
+  msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz\n";
   msg += Separator(SEP_COUNT);
   return msg;
 }
@@ -175,13 +175,13 @@ void commandInterpreter()
 
     if (!lastS.equals("")) S = lastS;
 
-    if (S.equalsIgnoreCase(INDEX_FREQUENCY))
+    if (S.equalsIgnoreCase(INDEX_FREQ))
     {
-      changeParam(lastS, MENU_TEXT_FREQUENCY, INDEX_FREQUENCY, text, Frequency, MIN_FREQUENCY, MAX_FREQUENCY, "MHz");
+      changeParam(lastS, MENU_TEXT_FREQ, INDEX_FREQ, text, Freq, MIN_FREQ, MAX_FREQ, "MHz");
     }
-    else if (S.equalsIgnoreCase(INDEX_IF_FREQUENCY))
+    else if (S.equalsIgnoreCase(INDEX_INT_FREQ))
     {
-      changeParam(lastS, MENU_TEXT_IF_FREQUENCY, INDEX_IF_FREQUENCY, text, IF_Frequency, MIN_IF_FREQUENCY, MAX_IF_FREQUENCY, "MHz");
+      changeParam(lastS, MENU_TEXT_INT_FREQ, INDEX_INT_FREQ, text, IntFreq, MIN_INT_FREQ, MAX_INT_FREQ, "MHz");
     }
     else
     {
