@@ -1,96 +1,90 @@
-## SAA1057 PLL Controller Library
+# SAA1057 PLL Controller Library
 
-## Descrição
+## Description
 
-- Biblioteca Arduino para controlar o circuito integrado PLL SAA1057.<br>
-Fornece funções para configurar e operar o dispositivo.<br>
+A library for Arduino that provides functions to configure and operate the SAA1057 PLL integrated circuit. This library enables control over various aspects of the PLL's operation.
 
-## Requisitos
+## Features
 
-- Arduino IDE
-- Esta biblioteca é compatível com a maioria das placas Arduino.<br>
-- Circuito integrado SAA1057.<br>
+- **Arduino Compatibility**: Works with most Arduino boards.
+- **PLL Control Functions**: Functions to set frequency shifts, data configuration, and more.
+- **Configuration**: Easy-to-use API for setting up pins and operating modes.
+- **DIP Switch Integration**: Support for configuring pins via DIP switches.
 
-## Instalação
+## Requirements
 
-- Baixe a biblioteca.<br>
-- Instale via Arduino IDE:<br> 
-Sketch > Incluir Biblioteca > Adicionar Biblioteca...<br>
+- **Arduino IDE**: To install the library.
+- **Hardware**: SAA1057 PLL circuit integrated into your project.
+- **Board Compatibility**: Most Arduino-compatible boards supported.
 
-## Uso
+## Installation
+
+To install the library:
+
+1. Download the repository from GitHub:
+   [https://github.com/junon10/saa1057](https://github.com/junon10/saa1057)
+
+2. In Arduino IDE, go to Sketch > Include Library > Add ZIP File...
+
+3. Select the downloaded zip file.
+
+## Usage
 
 ```c++
 #include <SAA1057.h>
 
-/* Declaração do objeto pll */
+// Declare an instance of the SAA1057 PLL
 SAA1057 pll;
 
-/* Define os 3 pinos de conexão do Arduino com o PLL */
+// Configure the PLL pins
 pll.begin(clock_pin, data_pin, dlen_pin);
-        
-/* Receptor FM (F + 10,7MHz)
-   Transmissor FM (F + 0)
-   Receptor FM (F - 10,7MHz) */
-pll.setFreqShift(float MHz);
 
-/* Força os bits da variável (Data) para 1(um), e
-a envia à WordB, iniciando no bit determinado 
-por Shl = ShiftLeft (deslocamento para a esquerda), 
-conforme as informações do arquivo .h */
-pll.set(uint16_t Data, uint16_t Shl);
-
-/* Força os bits da variável (Data) para 0(zero) */
-pll.clear(uint16_t Data, uint16_t Shl);
-    
-/* Teste do PLL SAA1057 em 100MHz */
-pll.setDefaultConfig();
-    
-/* Define a frequência de operação e 
-consequentemente a velocidade de travamento 
-do pll (corrente no Loop Filter).*/
-pll.setFrequency(float MHz, uint16_t Speed);
-
-/* Efetiva as mudanças de configuração. */
-pll.commitConfig();
-
-/* Configuração de pinagem da DipSwitch. */
+// DIP Switch configuration example (b7 to b0)
 pll.setDipSwPinout(b7, b6, b5, b4, b3, b2, b1, b0);
 
-/* Define a frequência baseada na DipSwitch. */
-pll.setFrequencyByDipSw(Speed);
+// Force data bits to 1 and send to WordB
+pll.set(data, shiftLeft);
+
+// Clear data bits (force to 0)
+pll.clear(data, shiftLeft);
+
+// Example of setting a specific configuration
+pll.setDefaultConfig();
+
+// Configure the operating frequency and lock speed
+pll.setFrequency(108.0, CP_007); // Frequency in MHz, Lock Filter Speed (current)
+// or
+pll.setFrequencyByDipSw(CP_007);
+
+// Commit changes
+pll.commitConfig();
 ```
 
-## Limitações
+## Limitations
 
-- Consulte o datasheet do SAA1057 para detalhes técnicos.<br>
+- For detailed technical specifications, refer to the SAA1057 datasheet.
+- Function parameters and return values may vary based on hardware configuration.
 
-## Autor
-- Junon M.
+## Author
 
-## Repositório
-[https://github.com/junon10/saa1057](https://github.com/junon10/saa1057)
+- **Junon M.**  
+  Contact: [junon10@tutamail.com](mailto:junon10@tutamail.com)
 
-## Licença
+## Contributing
 
-- GPL-3.0
+Contributions are welcome! Please fork the repository and send a pull request.
 
-## Contribuição
+## Repository
 
-- Contribuições são bem-vindas! Envie um pull request.
+- [https://github.com/junon10/saa1057](https://github.com/junon10/saa1057)
 
-## Referências
+## References
 
-- Datasheet SAA1057<br>
-- Documentação Arduino<br>
+- SAA1057 Datasheet
+- Arduino Documentation
 
-## Log de Alterações
+## Changelog
 
-### 2024/06/15 - v1.0.6  
-- Commit inicial.<br>
-
-### 2025/01/09 - v1.0.7  
-- Definição de frequência por DipSwitch já integrada nesta biblioteca.<br>
-
-### 2025/01/13 - v1.0.8
-- Corrigido bug de decodificação da DipSwitch.<br>
-
+- **v1.0.6 (2024/06/15)**: Initial commit.
+- **v1.0.7 (2025/01/09)**: Frequency configuration By DipSwitch integrated.
+- **v1.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
