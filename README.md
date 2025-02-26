@@ -88,3 +88,9 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.6 (2024/06/15)**: Initial commit.
 - **v1.0.7 (2025/01/09)**: Frequency configuration By DipSwitch integrated.
 - **v1.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
+
+## License
+
+- GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+
+
