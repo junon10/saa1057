@@ -3,6 +3,7 @@
   Version: 1.0.8
   Date: 2025/01/13
   Author: Junon M
+  License: GPLv3
 */
 
 #ifndef SAA1057_h
