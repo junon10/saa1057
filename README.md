@@ -1,4 +1,4 @@
-# SAA1057 PLL Controller Library
+# SAA1057 PLL Controller Arduino Library
 
 ## Description
 
