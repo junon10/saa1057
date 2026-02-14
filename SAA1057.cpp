@@ -1,7 +1,7 @@
 /*
-  Lib: PLL SAA1057
-  Version: 1.0.8
-  Date: 2025/01/13
+  Lib: SAA1057 PLL
+  Version: 1.0.0.9
+  Date: 2026/02/14
   Author: Junon M
   License: GPLv3
 */
@@ -13,7 +13,7 @@
 SAA1057::SAA1057() {
 
   // Default config for dip switch pins (0 to 7)
-  for (int i = 0; i < SW_NUM_BITS; i++) _sw_pins[i] = i;
+  for (int i = 0; i < SW_COUNT; i++) _sw_pins[i] = i;
 
   _dip_sw_value = 0;
 
@@ -67,7 +67,7 @@ _sw_pins[2] = b2;
 _sw_pins[1] = b1;
 _sw_pins[0] = b0;
 
-for (int i = 0; i < SW_NUM_BITS; i++) pinMode(_sw_pins[i], INPUT_PULLUP);
+for (int i = 0; i < SW_COUNT; i++) pinMode(_sw_pins[i], INPUT_PULLUP);
 
 }
 
@@ -138,7 +138,8 @@ void SAA1057::sendConfig(uint16_t Word)
 
   for(int i = 0; i < 16; i++)
   {
-    SAA1057::sendBit(Word_tmp & 0b1000000000000000);
+    // 0b1000000000000000
+    SAA1057::sendBit(Word_tmp & 0x8000); 
     Word_tmp <<= 1;
   }
 
@@ -160,18 +161,18 @@ void SAA1057::sendConfig(uint16_t Word)
 
 void SAA1057::setDefaultConfig()
 {
-   // Para CP, PDM e T usar CLEAR
+   // For CP, PDM and T use CLEAR
 
    SAA1057::clear(0xFFFF, 0);        
-   SAA1057::set(T_IN_LOCK_CNT, T_SHL);    // Saida Pino de teste = Contador in-lock
-   SAA1057::set(BRM, BRM_SHL);  // Corrente no latch reduzida automaticamente
-   SAA1057::clear(PDM_CLEAR, PDM_SHL);  // Modo do detector de fase = Automático on/off
-   SAA1057::clear(SLA, SLA_SHL);  // Modo de carregamento do LatchA = Assíncrono
-   SAA1057::set(SB2, SB2_SHL);  // Habilita os últimos 8 bits da wordB SLA até T0
-   SAA1057::set(CP_007, CP_SHL);   // Corrente detector fase = 0,07mA
+   SAA1057::set(T_IN_LOCK_CNT, T_SHL); // Test pin output = In-lock counter   
+   SAA1057::set(BRM, BRM_SHL); // Current in latch automatically reduced 
+   SAA1057::clear(PDM_CLEAR, PDM_SHL); // Phase detector mode = Automatic on/off 
+   SAA1057::clear(SLA, SLA_SHL); // LatchA load mode = Asynchronous 
+   SAA1057::set(SB2, SB2_SHL); // Enables the last 8 bits of the wordB SLA until T0 
+   SAA1057::set(CP_007, CP_SHL); // Phase detector current = 0.07mA  
    SAA1057::clear(REFH, REFH_SHL); // Ref = 1KHz
-   SAA1057::set(FM, FM_SHL);   // Modo FM
-   SAA1057::set(WORDB, WORDB_SHL);  // Sinaliza WordB
+   SAA1057::set(FM, FM_SHL); // FM mode   
+   SAA1057::set(WORDB, WORDB_SHL); // Flag WordB 
 
    WordA = 10000; // 100.0MHz
 
@@ -197,7 +198,7 @@ void SAA1057::setFrequency(float MHz, uint16_t Speed)
 
 void SAA1057::setFrequencyByDipSw(uint16_t Speed)
 {
-  for (int i = 0; i < SW_NUM_BITS; i++)
+  for (int i = 0; i < SW_COUNT; i++)
   {
     _dip_sw_value = bitWrite(_dip_sw_value, i, !digitalRead(_sw_pins[i])); 
   }

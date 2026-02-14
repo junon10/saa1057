@@ -14,7 +14,7 @@ A library for Arduino that provides functions to configure and operate the SAA10
 ## Requirements
 
 - **Arduino IDE**: To install the library.
-- **Hardware**: SAA1057 PLL circuit integrated into your project.
+- **Hardware**: SAA1057 PLL circuit integrated and discrete components.
 - **Board Compatibility**: Most Arduino-compatible boards supported.
 
 ## Installation
@@ -85,9 +85,10 @@ Contributions are welcome! Please fork the repository and send a pull request.
 
 ## Changelog
 
-- **v1.0.6 (2024/06/15)**: Initial commit.
-- **v1.0.7 (2025/01/09)**: Frequency configuration By DipSwitch integrated.
-- **v1.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
+- **v1.0.0.6 (2024/06/15)**: Initial commit.
+- **v1.0.0.7 (2025/01/09)**: Frequency configuration By DipSwitch integrated.
+- **v1.0.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
+- **v1.0.0.9 (2026/02/14)**: Small refactoring.
 
 ## License
 

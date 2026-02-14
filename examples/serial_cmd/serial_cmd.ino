@@ -1,17 +1,17 @@
 /*
-  Lib: PLL SAA1057
-  Version: 1.0.8
-  Date: 2025/01/13
+  Lib: SAA1057 PLL
+  Version: 1.0.0.9
+  Date: 2026/02/14
   Author: Junon M
   Hardware: Arduino Uno or Nano controlled by serial port
 */
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.8";
+const char * VERSION = "1.0.0.9";
 
 //----------------------------------------------------------------
-// Configuração do menu serial
+// Serial menu configuration
 //----------------------------------------------------------------
 const char MENU_TEXT_FREQ[] = "Frequency";
 const char INDEX_FREQ[] = "1";
@@ -27,25 +27,25 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-// Frequência inicial padrão
+// Default initial frequency
 //----------------------------------------------------------------
 float Freq = 94.1f; // 100.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-// Frequência intermediária para receptor fm +10.7MHz
+// Intermediate frequency for FM receiver +10.7MHz
 //----------------------------------------------------------------
 float IntFreq = 10.7f; //  0.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-// Corrente dimensionada para sintonia rápida em receptores fm
+// Rated current for fast tuning in FM receivers
 //----------------------------------------------------------------
 const uint16_t FAST_TUNE = CP_023;
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-// Corrente dimensionada para sintonia lenta em receptores fm
+// Rated current for slow tuning in FM receivers
 //----------------------------------------------------------------
 const uint16_t SLOW_TUNE = CP_007;
 //----------------------------------------------------------------
@@ -59,7 +59,7 @@ const int SAA_DLEN_PIN  = 12;
 //----------------------------------------------------------------
 
 
-SAA1057 pll; // Declaração do objeto pll
+SAA1057 pll; // PLL object declaration
 
 
 void setup() {
@@ -70,15 +70,15 @@ void setup() {
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
   pll.clear(0xFFFF, 0);        
-  pll.set(T_IN_LOCK_CNT, T_SHL);    // Saida Pino de teste = Contador in-lock
-  pll.set(BRM, BRM_SHL);  // Corrente no latch reduzida automaticamente
-  pll.clear(PDM_CLEAR, PDM_SHL);  // Modo do detector de fase = Automático on/off
-  pll.clear(SLA, SLA_SHL);  // Modo de carregamento do LatchA = Assíncrono
-  pll.set(SB2, SB2_SHL);  // Habilita os últimos 8 bits da wordB SLA até T0
-  pll.set(CP_07, CP_SHL);   // Corrente detector fase = 0,07mA
+  pll.set(T_IN_LOCK_CNT, T_SHL);  // Test pin output = In-lock counter
+  pll.set(BRM, BRM_SHL);  // Current in latch automatically reduced
+  pll.clear(PDM_CLEAR, PDM_SHL);  // Phase detector mode = Automatic on/off
+  pll.clear(SLA, SLA_SHL);  // LatchA load mode = Asynchronous
+  pll.set(SB2, SB2_SHL);  // Enables the last 8 bits of the wordB SLA until T0
+  pll.set(CP_07, CP_SHL);   // Phase detector current = 0.07mA
   pll.clear(REFH, REFH_SHL); // Ref = 1KHz
-  pll.set(FM, FM_SHL);   // Modo FM
-  pll.set(WORDB, WORDB_SHL);  // Sinaliza WordB
+  pll.set(FM, FM_SHL);   // FM mode
+  pll.set(WORDB, WORDB_SHL);  // Flag WordB
   
   commitConfig();
 }
@@ -91,11 +91,11 @@ void loop() {
 
 void commitConfig()
 {
-  pll.setFreqShift(/* Frequência Intermediária em MHz */ IntFreq);
+  pll.setFreqShift(/* Intermediate frequency in MHz */ IntFreq);
 
-  pll.setFrequency(/* Frequência em MHz */ Freq, /* Corrente no detector de fase */ FAST_TUNE);
-  delay(50); // tempo para sintonizar
-  pll.setFrequency(/* Frequência em MHz */ Freq, /* Corrente no detector de fase */ SLOW_TUNE);
+  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ FAST_TUNE);
+  delay(50); // time to tune in
+  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SLOW_TUNE);
 }
 
 
@@ -113,8 +113,8 @@ String getCommands()
 {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "PLL SAA1057\nVersion: " + String(VERSION) + "\n\n";
-  msg += "Escolha uma opção:\n\n";
+  msg += "SAA1057 PLL\nVersion: " + String(VERSION) + "\n\n";
+  msg += "Select an option:\n\n";
   msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
   msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz\n";
   msg += Separator(SEP_COUNT);
@@ -132,7 +132,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
   {
     returned_text = menu_index;
     S += Separator(SEP_COUNT);
-    S += "Digite o valor para " + menu_label + " entre " + String(min_value, 2) + unit + " e " + String(max_value, 2) + unit;
+    S += "Enter the value for " + menu_label + " between " + String(min_value, 2) + unit + " and " + String(max_value, 2) + unit;
     Serial.println(S);
     pos++;
   }
@@ -146,13 +146,13 @@ void changeParam(String &returned_text, const String menu_label, const String me
       commitConfig();
       pos = 0;
       returned_text = "";
-      S += "Resposta = " + String(number, 2) + unit;
+      S += "Answer = " + String(number, 2) + unit;
       S += getCommands();
       Serial.println(S);
     }
     else
     {
-      S = "Erro, o valor " + String(number, 2) + unit + " está fora do intervalo, tente novamente!";
+      S = "Error, the value " + String(number, 2) + unit + " is outside the acceptable range! Please try again...";
       Serial.println(S);
     }
   }
