@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.9
-  Date: 2026/02/14
+  Version: 1.0.0.10
+  Date: 2026/03/14
   Author: Junon M
   Hardware: Arduino Uno and Display module
 */
@@ -25,6 +25,7 @@ const int pin_d5 = 5;
 const int pin_d6 = 6; 
 const int pin_d7 = 7;
 
+saa1057_wordB WordB;
 
 SAA1057 pll;
 
@@ -44,24 +45,25 @@ void setup() {
   // Arduino pins
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
-  pll.clear(0xFFFF, 0);        
-  pll.set(T_IN_LOCK_CNT, T_SHL);  // Test pin output = In-lock counter
-  pll.set(BRM, BRM_SHL);  // Current in latch automatically reduced
-  pll.clear(PDM_CLEAR, PDM_SHL);  // Phase detector mode = Automatic on/off
-  pll.clear(SLA, SLA_SHL);  // LatchA load mode = Asynchronous
-  pll.set(SB2, SB2_SHL);  // Enables the last 8 bits of the wordB SLA until T0
-  pll.set(CP_07, CP_SHL);   // Phase detector current = 0.07mA
-  pll.clear(REFH, REFH_SHL); // Ref = 1KHz
-  pll.set(FM, FM_SHL);   // FM mode
-  pll.set(WORDB, WORDB_SHL);  // Flag WordB
+  WordB.refined.ADDR = ADDR_WORDB;
+  WordB.refined.FM = MODE_FM;
+  WordB.refined.REF = REF_1KHZ;
+  WordB.refined.CP = CP_0_07MA;
+  WordB.refined.SB2 = SB2_ON;
+  WordB.refined.SLA = SLA_ASYNC;
+  WordB.refined.PDM = PDM_AUTO;
+  WordB.refined.BRM = BRM_ECONOMY;
+  WordB.refined.T = T_LOCK_DET;
+
+  pll.set(WordB.raw);
   
   pll.setFreqShift(/* intermediate frequency in MHz */ IntFreq);
 
   // Rated current for FM transmitters
   //
-  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ CP_07);
+  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ CP_0_7MA);
   delay(2000);
-  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ CP_007);
+  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ CP_0_07MA);
 
   lcd.setCursor(0,0);
   lcd.print("SAA1057 PLL");

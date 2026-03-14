@@ -1,14 +1,14 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.9
-  Date: 2026/02/14
+  Version: 1.0.0.10
+  Date: 2026/03/14
   Author: Junon M
-  Hardware: Arduino Uno or Nano controlled by serial port
+  Hardware: Arduino Uno or Nano controlled by serial monitor
 */
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.9";
+const char * VERSION = "1.0.0.10";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -41,13 +41,13 @@ float IntFreq = 10.7f; //  0.0 MHz
 //----------------------------------------------------------------
 // Rated current for fast tuning in FM receivers
 //----------------------------------------------------------------
-const uint16_t FAST_TUNE = CP_023;
+const uint16_t FAST_TUNE = CP_0_23MA;
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
 // Rated current for slow tuning in FM receivers
 //----------------------------------------------------------------
-const uint16_t SLOW_TUNE = CP_007;
+const uint16_t SLOW_TUNE = CP_0_07MA;
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -58,6 +58,7 @@ const int SAA_DATA_PIN  = 11;
 const int SAA_DLEN_PIN  = 12;
 //----------------------------------------------------------------
 
+saa1057_wordB WordB;
 
 SAA1057 pll; // PLL object declaration
 
@@ -69,23 +70,24 @@ void setup() {
   // Arduino pins
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
-  pll.clear(0xFFFF, 0);        
-  pll.set(T_IN_LOCK_CNT, T_SHL);  // Test pin output = In-lock counter
-  pll.set(BRM, BRM_SHL);  // Current in latch automatically reduced
-  pll.clear(PDM_CLEAR, PDM_SHL);  // Phase detector mode = Automatic on/off
-  pll.clear(SLA, SLA_SHL);  // LatchA load mode = Asynchronous
-  pll.set(SB2, SB2_SHL);  // Enables the last 8 bits of the wordB SLA until T0
-  pll.set(CP_07, CP_SHL);   // Phase detector current = 0.07mA
-  pll.clear(REFH, REFH_SHL); // Ref = 1KHz
-  pll.set(FM, FM_SHL);   // FM mode
-  pll.set(WORDB, WORDB_SHL);  // Flag WordB
+  WordB.refined.ADDR = ADDR_WORDB;
+  WordB.refined.FM = MODE_FM;
+  WordB.refined.REF = REF_1KHZ;
+  WordB.refined.CP = CP_0_23MA;
+  WordB.refined.SB2 = SB2_ON;
+  WordB.refined.SLA = SLA_ASYNC;
+  WordB.refined.PDM = PDM_AUTO;
+  WordB.refined.BRM = BRM_ECONOMY;
+  WordB.refined.T = T_LOCK_DET;
+
+  pll.set(WordB.raw);
   
   commitConfig();
 }
 
 
 void loop() {
-  commandInterpreter();
+  handleCmd();
 }
 
 
@@ -109,7 +111,7 @@ String Separator(int len)
 
 
 
-String getCommands() 
+String getCmds() 
 {
   String msg = "";
   msg += Separator(SEP_COUNT);
@@ -147,7 +149,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
       pos = 0;
       returned_text = "";
       S += "Answer = " + String(number, 2) + unit;
-      S += getCommands();
+      S += getCmds();
       Serial.println(S);
     }
     else
@@ -162,7 +164,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
 
 
 
-void commandInterpreter()
+void handleCmd()
 {
   static String lastS = "";
   String S = "";
@@ -185,7 +187,7 @@ void commandInterpreter()
     }
     else
     {
-      Serial.println(getCommands());
+      Serial.println(getCmds());
     }
   }
 }

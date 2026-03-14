@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.9
-  Date: 2026/02/14
+  Version: 1.0.0.10
+  Date: 2026/03/14
   Author: Junon M
   License: GPLv3
 */
@@ -17,8 +17,20 @@ SAA1057::SAA1057() {
 
   _dip_sw_value = 0;
 
-  WordB = 0;
-  WordA = 0;
+   WordB.refined.ADDR = ADDR_WORDB;
+   WordB.refined.FM = MODE_FM;
+   WordB.refined.REF = REF_1KHZ;
+   WordB.refined.CP = CP_0_07MA;
+   WordB.refined.SB2 = SB2_ON;
+   WordB.refined.SLA = SLA_ASYNC;
+   WordB.refined.PDM = PDM_AUTO;
+   WordB.refined.BRM = BRM_ECONOMY;
+   WordB.refined.T = T_LOCK_DET;
+
+   WordA.refined.N = 10000; // 100.0MHz
+   WordA.refined.MODE = 0;
+   WordA.refined.ADDR = ADDR_WORDA;
+
   _Freq_Shift = 0; 
 }
 
@@ -78,19 +90,6 @@ void SAA1057::setFreqShift(float MHz)
   _Freq_Shift = MHz;
 }
 
-
-
-void SAA1057::set(uint16_t Data, uint16_t Shl)
-{
-  WordB |= (Data << Shl);
-}
-
-
-
-void SAA1057::clear(uint16_t Data, uint16_t Shl)
-{
-  WordB &= ~(Data << Shl);
-}
 
 
 
@@ -156,29 +155,11 @@ void SAA1057::sendConfig(uint16_t Word)
 }
 
 
-
-
-
-void SAA1057::setDefaultConfig()
+void SAA1057::set(uint16_t Word)
 {
-   // For CP, PDM and T use CLEAR
-
-   SAA1057::clear(0xFFFF, 0);        
-   SAA1057::set(T_IN_LOCK_CNT, T_SHL); // Test pin output = In-lock counter   
-   SAA1057::set(BRM, BRM_SHL); // Current in latch automatically reduced 
-   SAA1057::clear(PDM_CLEAR, PDM_SHL); // Phase detector mode = Automatic on/off 
-   SAA1057::clear(SLA, SLA_SHL); // LatchA load mode = Asynchronous 
-   SAA1057::set(SB2, SB2_SHL); // Enables the last 8 bits of the wordB SLA until T0 
-   SAA1057::set(CP_007, CP_SHL); // Phase detector current = 0.07mA  
-   SAA1057::clear(REFH, REFH_SHL); // Ref = 1KHz
-   SAA1057::set(FM, FM_SHL); // FM mode   
-   SAA1057::set(WORDB, WORDB_SHL); // Flag WordB 
-
-   WordA = 10000; // 100.0MHz
-
-   SAA1057::commitConfig();
+  if (Word & 0x8000) WordB.raw = Word;
+  else WordA.raw = Word;
 }
-
 
 
 void SAA1057::setFrequency(float MHz, uint16_t Speed)
@@ -187,10 +168,12 @@ void SAA1057::setFrequency(float MHz, uint16_t Speed)
   
   freq = MHz;
   freq += _Freq_Shift;
-  WordA = round(freq * 100);
 
-  SAA1057::clear(CP_CLEAR, CP_SHL);
-  SAA1057::set(Speed, CP_SHL);
+  WordA.refined.N = round(freq * 100);
+  WordA.refined.MODE = 0;
+  WordA.refined.ADDR = ADDR_WORDA;
+
+  WordB.refined.CP = Speed;
 
   SAA1057::commitConfig();
 }
@@ -212,6 +195,6 @@ void SAA1057::setFrequencyByDipSw(uint16_t Speed)
 
 void SAA1057::commitConfig()
 {
-  SAA1057::sendConfig(WordB);
-  SAA1057::sendConfig(WordA);
+  SAA1057::sendConfig(WordB.raw);
+  SAA1057::sendConfig(WordA.raw);
 }

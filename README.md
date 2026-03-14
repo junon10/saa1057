@@ -33,31 +33,39 @@ To install the library:
 ```c++
 #include <SAA1057.h>
 
+// Declare WordB register
+saa1057_wordB WordB;
+
 // Declare an instance of the SAA1057 PLL
 SAA1057 pll;
 
-// Configure the PLL pins
-pll.begin(clock_pin, data_pin, dlen_pin);
+void setup() {
 
-// DIP Switch configuration example (b7 to b0)
-pll.setDipSwPinout(b7, b6, b5, b4, b3, b2, b1, b0);
+  // Configure the PLL pins
+  pll.begin(clock_pin, data_pin, dlen_pin);
 
-// Force data bits to 1 and send to WordB
-pll.set(data, shiftLeft);
+  // DIP Switch configuration example (b7 to b0)
+  pll.setDipSwPinout(7, 6, 5, 4, 3, 2, 1, 0);
 
-// Clear data bits (force to 0)
-pll.clear(data, shiftLeft);
+  WordB.refined.ADDR = WORDB_ADDR;
+  WordB.refined.FM = MODE_FM;
+  WordB.refined.REF = REF_1KHZ;
+  WordB.refined.CP = CP_0_07MA;
+  WordB.refined.SB2 = SB2_ON;
+  WordB.refined.SLA = SLA_ASYNC;
+  WordB.refined.PDM = PDM_AUTO;
+  WordB.refined.BRM = BRM_ECONOMY;
+  WordB.refined.T = T_LOCK_DET;
 
-// Example of setting a specific configuration
-pll.setDefaultConfig();
+  pll.set(WordB.raw);
+  
+  pll.setFrequency(108.0, CP_0_07MA); // Frequency in MHz, Lock Filter Speed (current)
+  // or
+  pll.setFrequencyByDipSw(CP_0_07MA);
 
-// Configure the operating frequency and lock speed
-pll.setFrequency(108.0, CP_007); // Frequency in MHz, Lock Filter Speed (current)
-// or
-pll.setFrequencyByDipSw(CP_007);
+  pll.commitConfig();
+}
 
-// Commit changes
-pll.commitConfig();
 ```
 
 ## Limitations
@@ -88,7 +96,8 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.6 (2024/06/15)**: Initial commit.
 - **v1.0.0.7 (2025/01/09)**: Frequency configuration By DipSwitch integrated.
 - **v1.0.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
-- **v1.0.0.9 (2026/02/14)**: Small refactoring.
+- **v1.0.0.9 (2026/02/14)**: Small refactor.
+- **v1.0.0.10 (2026/03/14)**: Refactor.
 
 ## License
 

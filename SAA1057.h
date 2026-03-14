@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.9
-  Date: 2026/02/14
+  Version: 1.0.0.10
+  Date: 2026/03/14
   Author: Junon M
   License: GPLv3
 */
@@ -17,66 +17,47 @@
 //  15 14   13  12  11  10   9   8        7    6    5   4  3  2  1  0
 //  1  FM REFH CP3 CP2 CP1 CP0 SB2      SLA PDM1 PDM0 BRM T3 T2 T1 T0
 
-#define  WORDB               1
-#define  WORDB_SHL          15
+// Register Address / Endereço do Registrador (Bit 15)
+#define ADDR_WORDA          0
+#define ADDR_WORDB          1
 
-//  FM = FM MODE
-// ~FM = AM MODE
-#define  FM                  1  
-#define  FM_SHL             14  
+// Operation Mode / Modo de Operação (Bit 14)
+#define MODE_AM             0
+#define MODE_FM             1
 
-//  REFH = REF 1KHz 
-// ~REFH = REF 1,25KHz
-#define  REFH                1
-#define  REFH_SHL           13
+// Reference Frequency / Frequência de Referência (Bit 13)
+#define REF_1_25KHZ         0
+#define REF_1KHZ            1
 
-// Example
-// High speed fm transmitter = 0,7mA
-// Slow speed fm transmitter = 0,07mA
-// Default speed fm receiver = 0,07mA
+// Phase Detector Current / Corrente do Detector de Fase (Bits 9-12)
+#define CP_0_023MA          0b0000 
+#define CP_0_07MA           0b0001    
+#define CP_0_23MA           0b0010    
+#define CP_0_7MA            0b0110    
+#define CP_2_3MA            0b1110    
 
-// PHASE DETECTOR CURRENT 
-#define  CP_CLEAR       0b1111 // 0,023mA
-#define  CP_007         0b0001 // 0,07mA   
-#define  CP_023         0b0010 // 0,23mA   
-#define  CP_07          0b0110 // 0,7mA   
-#define  CP_23          0b1110 // 2,3mA   
-#define  CP_SHL              9
+// Latch B Control / Controle do Latch B (Bit 8)
+#define SB2_OFF             0 // Bits 0-7 set to '0' automatically
+#define SB2_ON              1 // Enables last 8 bits
 
-// enables last 8 bits (SLA to T0) of data word B; ‘1’ = enables, ‘0’ = disables; 
-// when programmed ‘0’, the last 8 bits of data word B will be set to ‘0’ automatically
-#define  SB2                 1
-#define  SB2_SHL             8 
+// Latch A Load Mode / Modo de Carga do Latch A (Bit 7)
+#define SLA_ASYNC           0 // Asynchronous load
+#define SLA_SYNC            1 // Synchronous load
 
+// Phase Detector Mode / Modo do Detector de Fase (Bits 5-6)
+#define PDM_AUTO            0b00 // Automatic ON/OFF
+#define PDM_ON              0b10 // Always ON
+#define PDM_OFF             0b11 // Always OFF (High impedance)
 
-//  load mode of latch A; ‘1’ = synchronous, ‘0’ = asynchronous 
-#define  SLA                 1 
-#define  SLA_SHL             7
+// Bus Receiver Mode / Economia de Energia do Barramento (Bit 4)
+#define BRM_ALWAYS_ON       0 // Current always on
+#define BRM_ECONOMY         1 // Current switched off after transmission
 
-
-// phase detector mode
-// ~PDM = Automatic on/off
-//  PDM = 0b10 = ON
-//  PDM = 0b11 = OFF
-#define  PDM_CLEAR        0b11
-#define  PDM_ON           0b10
-#define  PDM_OFF          0b11
-#define  PDM_SHL             5
-
-// bus receiver mode bit; in this mode the supply 
-// current of the BUS receiver will be switched-off
-// automatically after a data transmission (current-draw is reduced); 
-// ‘1’ = current switched; 
-// ‘0’ = current always on
-#define  BRM                 1
-#define  BRM_SHL             4      
-
-// Test pin output
-#define  T_CLEAR        0b1111 // 1
-#define  T_FREQ_REF     0b0100 // reference frequency
-#define  T_DIV_PRG      0b0001 // output programmable counter
-#define  T_IN_LOCK_CNT  0b0101 // output in-lock counter, ‘0’ = out-lock, ‘1’ = in-lock
-#define  T_SHL               0
+// Test Pin Output / Saída do Pino de Teste (Bits 0-3)
+#define T_OFF               0b0000 
+#define T_FREQ_REF          0b0100 // Reference frequency
+#define T_DIV_PRG           0b0001 // Programmable counter output
+#define T_LOCK_DET          0b0101 // In-lock counter (1=Locked)
 
 // NOTE: The test output pin must have a pull-up resistor.
 //==============================================================================
@@ -88,10 +69,42 @@
 #define SW_COUNT      8
 
 
+typedef union {
+    struct {
+        uint16_t N    : 14; // Divisor (Bits 0 to 13) - The core frequency math!
+        uint16_t MODE : 1;  // Bit 14: Reserved/Function
+        uint16_t ADDR : 1;  // Bit 15: Word Address (WORDA = 0)
+    } refined;
+    uint16_t raw;
+} saa1057_wordA;
+
+
+typedef union
+{
+    struct
+    {
+        // --- Low Byte (Bits 0 to 7) ---
+        uint16_t T   : 4; // Test pin output (T0-T3)
+        uint16_t BRM : 1; // Bus receiver mode: 1=switched, 0=always on
+        uint16_t PDM : 2; // Phase detector mode: 00=auto, 10=ON, 11=OFF
+        uint16_t SLA : 1; // Load mode latch A: 1=sync, 0=async
+
+        // --- High Byte (Bits 8 to 15) ---
+        uint16_t SB2  : 1; // Enable last 8 bits of Word B: 1=enable
+        uint16_t CP   : 4; // Phase detector current (CP0-CP3)
+        uint16_t REF : 1; // Reference frequency: 1=1kHz, 0=1.25kHz
+        uint16_t FM   : 1; // Operation mode: 1=FM, 0=AM
+        uint16_t ADDR : 1; // Register address: 1=Word B, 0=Word A
+    } refined;
+    uint16_t raw;
+} saa1057_wordB;
+
+
 class SAA1057
 {
   private:
-    uint16_t WordA, WordB;
+    saa1057_wordA WordA;
+    saa1057_wordB WordB;
 
     uint8_t _clock_pin, _data_pin, _dlen_pin;
 
@@ -123,14 +136,8 @@ class SAA1057
 
     void setDipSwPinout(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4, 
     const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0);
-
-    void set(uint16_t Data, uint16_t Shl);
-
-    void clear(uint16_t Data, uint16_t Shl);
     
-    // SAA1057 PLL test in 100MHz
-    //
-    void setDefaultConfig();
+    void set(uint16_t Word);
     
     void setFrequency(float MHz, uint16_t Speed);
 
