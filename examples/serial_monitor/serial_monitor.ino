@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.13
+  Version: 1.0.0.14
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
@@ -9,7 +9,7 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.13";
+const char * VERSION = "1.0.0.14";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -57,15 +57,15 @@ void setup() {
   // Arduino pins
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
-  WordB.refined.ADDR = ADDR_WORDB;
-  WordB.refined.FM = MODE_FM;
-  WordB.refined.REF = REF_1KHZ;
-  WordB.refined.CP = CP_0_23MA;
-  WordB.refined.SB2 = SB2_ON;
-  WordB.refined.SLA = SLA_ASYNC;
-  WordB.refined.PDM = PDM_AUTO;
-  WordB.refined.BRM = BRM_ECONOMY;
-  WordB.refined.T = T_LOCK_DET;
+  WordB.ADDR = ADDR_WORDB;
+  WordB.FM = MODE_FM;
+  WordB.REF = REF_1KHZ;
+  WordB.CP = CP_0_23MA;
+  WordB.SB2 = SB2_ON;
+  WordB.SLA = SLA_ASYNC;
+  WordB.PDM = PDM_AUTO;
+  WordB.BRM = BRM_ECONOMY;
+  WordB.T = T_LOCK_DET;
 
   pll.set(WordB.raw);
   
@@ -102,7 +102,7 @@ String Separator(int len) {
 String getConfig() {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 PLL\nVersion: " + String(VERSION) + "\n";
+  msg += "SAA1057 PLL\nFIRMWARE VERSION: " + String(VERSION) + "\n";
   msg += String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
   msg += String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz";
   msg += Separator(SEP_COUNT);

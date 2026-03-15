@@ -47,15 +47,15 @@ void setup() {
   // DIP Switch configuration example (b7 to b0)
   pll.setDipSwitchPins(7, 6, 5, 4, 3, 2, 1, 0);
 
-  WordB.refined.ADDR = ADDR_WORDB;
-  WordB.refined.FM = MODE_FM;
-  WordB.refined.REF = REF_1KHZ;
-  WordB.refined.CP = CP_0_07MA;
-  WordB.refined.SB2 = SB2_ON;
-  WordB.refined.SLA = SLA_ASYNC;
-  WordB.refined.PDM = PDM_AUTO;
-  WordB.refined.BRM = BRM_ECONOMY;
-  WordB.refined.T = T_LOCK_DET;
+  WordB.ADDR = ADDR_WORDB;
+  WordB.FM = MODE_FM;
+  WordB.REF = REF_1KHZ;
+  WordB.CP = CP_0_07MA;
+  WordB.SB2 = SB2_ON;
+  WordB.SLA = SLA_ASYNC;
+  WordB.PDM = PDM_AUTO;
+  WordB.BRM = BRM_ECONOMY;
+  WordB.T = T_LOCK_DET;
 
   pll.set(WordB.raw);
   
@@ -105,6 +105,7 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.11 (2026/03/15)**: Ref frequency const bug fix.
 - **v1.0.0.12 (2026/03/15)**: Another example added.
 - **v1.0.0.13 (2026/03/15)**: Charge pump constants added.
+- **v1.0.0.14 (2026/03/15)**: Improved readability of settings.
 
 ## License
 

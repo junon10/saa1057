@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.13
+  Version: 1.0.0.14
   Date: 2026/03/15
   Author: Junon M
   License: GPLv3
@@ -95,7 +95,7 @@ typedef union {
   struct {
     uint16_t N    : 15; // Divisor (Bits 0 to 14) - The core frequency math!
     uint16_t ADDR : 1;  // Bit 15: Word Address (WORDA = 0)
-  } refined;
+  };
   uint16_t raw;
 } saa1057_wordA;
 //------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ typedef union {
     uint8_t REF  : 1; // Reference frequency: 0=1kHz, 1=1.25kHz
     uint8_t FM   : 1; // Operation mode: 1=FM, 0=AM
     uint8_t ADDR : 1; // Register address: 1=Word B, 0=Word A
-  } refined;
+  };
   uint16_t raw;
 } saa1057_wordB;
 //------------------------------------------------------------------------------
