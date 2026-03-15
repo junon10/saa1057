@@ -115,11 +115,11 @@ class SAA1057
     virtual ~SAA1057();
     void begin(const uint8_t clock_pin, const uint8_t data_pin, const uint8_t dlen_pin);
     void setFreqShift(float MHz);
-    void setDipSwPinout(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4,
+    void setDipSwitchPins(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4,
                         const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0);
     void set(uint16_t Word);
     void setFrequency(float MHz, uint16_t Speed);
-    void setFrequencyByDipSw(uint16_t Speed);
+    void setFrequencyFromDipSwitch(uint16_t Speed);
     void commitConfig();
 };
 

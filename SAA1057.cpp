@@ -66,7 +66,7 @@ void SAA1057::begin(const uint8_t clock_pin, const uint8_t data_pin, const uint8
 
 
 
-void SAA1057::setDipSwPinout(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4,
+void SAA1057::setDipSwitchPins(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4,
                              const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0)
 {
   _sw_pins[7] = b7;
@@ -177,7 +177,7 @@ void SAA1057::setFrequency(float MHz, uint16_t Speed)
 }
 
 
-void SAA1057::setFrequencyByDipSw(uint16_t Speed)
+void SAA1057::setFrequencyFromDipSwitch(uint16_t Speed)
 {
   for (int i = 0; i < SW_COUNT; i++)
   {

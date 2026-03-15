@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.11
+  Version: 1.0.0.12
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and DipSwitch
@@ -36,7 +36,7 @@ void setup() {
   Serial.println();
 
   // DipSwitch Arduino pinout
-  pll.setDipSwPinout(7, 6, 5, 4, 3, 2, 1, 0);
+  pll.setDipSwitchPins(7, 6, 5, 4, 3, 2, 1, 0);
 
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
@@ -56,9 +56,9 @@ void setup() {
 
   // Rated current for FM transmitters
   //
-  pll.setFrequencyByDipSw(/* Phase detector current */ CP_0_7MA);
+  pll.setFrequencyFromDipSwitch(/* Phase detector current */ CP_0_7MA);
   delay(2000);
-  pll.setFrequencyByDipSw(/* Phase detector current */ CP_0_07MA);
+  pll.setFrequencyFromDipSwitch(/* Phase detector current */ CP_0_07MA);
 }
 
 

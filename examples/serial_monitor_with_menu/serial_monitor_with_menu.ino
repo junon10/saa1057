@@ -4,21 +4,23 @@
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
-  Type: No menu
+  Type: With menu
 */
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.12";
+const char * VERSION = "1.0.0.11";
 
 //----------------------------------------------------------------
 // Serial menu configuration
 //----------------------------------------------------------------
 const char MENU_TEXT_FREQ[] = "Frequency";
+const char INDEX_FREQ[] = "1";
 const float MAX_FREQ = 130.f;
 const float MIN_FREQ = 50.f;
 
 const char MENU_TEXT_INT_FREQ[] = "Intermediate Frequency";
+const char INDEX_INT_FREQ[] = "2";
 const float MAX_INT_FREQ = 10.7f;
 const float MIN_INT_FREQ = -10.7f;
 
@@ -28,7 +30,7 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 // Default initial frequency
 //----------------------------------------------------------------
-float Freq = 98.f; // in MHz
+float Freq = 94.1f; // 100.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -82,10 +84,6 @@ void setup() {
   pll.set(WordB.raw);
   
   commitConfig();
-
-  delay(500);
-
-  Serial.println(getConfig());
 }
 
 
@@ -114,40 +112,83 @@ String Separator(int len)
 
 
 
-String getConfig() 
+String getCmds() 
 {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 PLL\nVersion: " + String(VERSION) + "\n";
-  msg += String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
-  msg += String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz";
+  msg += "SAA1057 PLL\nVersion: " + String(VERSION) + "\n\n";
+  msg += "Select an option:\n\n";
+  msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
+  msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz\n";
   msg += Separator(SEP_COUNT);
   return msg;
 }
 
 
+
+void changeParam(String &returned_text, const String menu_label, const String menu_index, String text, float &value, const float min_value, const float max_value,  const String unit)
+{
+  static int pos = 0;
+  String S = "";
+
+  if (pos == 0)
+  {
+    returned_text = menu_index;
+    S += Separator(SEP_COUNT);
+    S += "Enter the value for " + menu_label + " between " + String(min_value, 2) + unit + " and " + String(max_value, 2) + unit;
+    Serial.println(S);
+    pos++;
+  }
+  else
+  {
+    float number = text.toFloat();
+
+    if ((number >= min_value) && (number <= max_value))
+    {
+      value = number;
+      commitConfig();
+      pos = 0;
+      returned_text = "";
+      S += "Answer = " + String(number, 2) + unit;
+      S += getCmds();
+      Serial.println(S);
+    }
+    else
+    {
+      S = "Error, the value " + String(number, 2) + unit + " is outside the acceptable range! Please try again...";
+      Serial.println(S);
+    }
+  }
+
+}
+
+
+
+
 void handleCmd()
 {
+  static String lastS = "";
+  String S = "";
+
   if (Serial.available())
   {
     String text = Serial.readStringUntil('\n');
-    text.trim();
-    
-    if (text.length() == 0) {
-      Serial.println(getConfig());
-      return;
-    }
-    
-    float value = text.toFloat();
 
-    if (value < MIN_FREQ) {
-      IntFreq = constrain(value, MIN_INT_FREQ, MAX_INT_FREQ);
-      Serial.println(getConfig());
-      commitConfig(); 
-    } else {
-      Freq = constrain(value, MIN_FREQ, MAX_FREQ);
-      Serial.println(getConfig());
-      commitConfig();
+    S = text;
+
+    if (!lastS.equals("")) S = lastS;
+
+    if (S.equalsIgnoreCase(INDEX_FREQ))
+    {
+      changeParam(lastS, MENU_TEXT_FREQ, INDEX_FREQ, text, Freq, MIN_FREQ, MAX_FREQ, "MHz");
+    }
+    else if (S.equalsIgnoreCase(INDEX_INT_FREQ))
+    {
+      changeParam(lastS, MENU_TEXT_INT_FREQ, INDEX_INT_FREQ, text, IntFreq, MIN_INT_FREQ, MAX_INT_FREQ, "MHz");
+    }
+    else
+    {
+      Serial.println(getCmds());
     }
   }
 }

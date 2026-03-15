@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.11
+  Version: 1.0.0.12
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Display module

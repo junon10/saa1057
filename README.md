@@ -45,7 +45,7 @@ void setup() {
   pll.begin(clock_pin, data_pin, dlen_pin);
 
   // DIP Switch configuration example (b7 to b0)
-  pll.setDipSwPinout(7, 6, 5, 4, 3, 2, 1, 0);
+  pll.setDipSwitchPins(7, 6, 5, 4, 3, 2, 1, 0);
 
   WordB.refined.ADDR = ADDR_WORDB;
   WordB.refined.FM = MODE_FM;
@@ -61,7 +61,7 @@ void setup() {
   
   pll.setFrequency(108.0, CP_0_07MA); // Frequency in MHz, Lock Filter Speed (current)
   // or
-  pll.setFrequencyByDipSw(CP_0_07MA);
+  pll.setFrequencyFromDipSwitch(CP_0_07MA);
 
   pll.commitConfig();
 }
@@ -99,6 +99,7 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.9 (2026/02/14)**: Small refactor.
 - **v1.0.0.10 (2026/03/14)**: Refactor.
 - **v1.0.0.11 (2026/03/15)**: Ref frequency const bug fix.
+- **v1.0.0.12 (2026/03/15)**: Another example added.
 
 ## License
 
