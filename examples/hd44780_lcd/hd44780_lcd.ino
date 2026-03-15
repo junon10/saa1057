@@ -1,9 +1,9 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.10
-  Date: 2026/03/14
+  Version: 1.0.0.11
+  Date: 2026/03/15
   Author: Junon M
-  Hardware: Arduino Uno and Display module
+  Hardware: Arduino Uno or Nano, and Display module
 */
 
 #include <LiquidCrystal.h>

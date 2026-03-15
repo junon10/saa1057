@@ -98,6 +98,7 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
 - **v1.0.0.9 (2026/02/14)**: Small refactor.
 - **v1.0.0.10 (2026/03/14)**: Refactor.
+- **v1.0.0.11 (2026/03/15)**: Ref frequency const bug fix.
 
 ## License
 

@@ -1,9 +1,9 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.10
-  Date: 2026/03/14
+  Version: 1.0.0.11
+  Date: 2026/03/15
   Author: Junon M
-  Hardware: Arduino Uno or Nano with DipSwitch
+  Hardware: Arduino Uno or Nano, and DipSwitch
 */
 
 #include "SAA1057.h"
@@ -12,7 +12,7 @@
 // FI adjust (intermediate frequency adjust)
 //---------------------------------------------------
 // 0.0 MHz, 10.7 MHz, -10.7 MHz
-const float IntFreq = 0.0f; 
+const float IntFreq = 0.0f;
 //---------------------------------------------------
 
 //---------------------------------------------------
@@ -35,11 +35,11 @@ void setup() {
   Serial.println("SAA1057 PLL");
   Serial.println();
 
-  // DipSwitch Arduino pinout 
-  pll.setDipSwPinout(7,6,5,4,3,2,1,0);
-   
+  // DipSwitch Arduino pinout
+  pll.setDipSwPinout(7, 6, 5, 4, 3, 2, 1, 0);
+
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
-  
+
   WordB.refined.ADDR = ADDR_WORDB;
   WordB.refined.FM = MODE_FM;
   WordB.refined.REF = REF_1KHZ;

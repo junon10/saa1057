@@ -1,14 +1,14 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.10
-  Date: 2026/03/14
+  Version: 1.0.0.11
+  Date: 2026/03/15
   Author: Junon M
-  Hardware: Arduino Uno or Nano controlled by serial monitor
+  Hardware: Arduino Uno or Nano, and Serial Monitor
 */
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.10";
+const char * VERSION = "1.0.0.11";
 
 //----------------------------------------------------------------
 // Serial menu configuration
