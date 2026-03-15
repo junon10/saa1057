@@ -47,7 +47,7 @@ void setup() {
   // DIP Switch configuration example (b7 to b0)
   pll.setDipSwPinout(7, 6, 5, 4, 3, 2, 1, 0);
 
-  WordB.refined.ADDR = WORDB_ADDR;
+  WordB.refined.ADDR = ADDR_WORDB;
   WordB.refined.FM = MODE_FM;
   WordB.refined.REF = REF_1KHZ;
   WordB.refined.CP = CP_0_07MA;
