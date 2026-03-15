@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.11
+  Version: 1.0.0.13
   Date: 2026/03/15
   Author: Junon M
   License: GPLv3
@@ -9,14 +9,10 @@
 #include "SAA1057.h"
 
 
-
 SAA1057::SAA1057() {
-
   // Default config for dip switch pins (0 to 7)
   for (int i = 0; i < SW_COUNT; i++) _sw_pins[i] = i;
-
   _dip_sw_value = 0;
-
   WordB.refined.ADDR = ADDR_WORDB;
   WordB.refined.FM = MODE_FM;
   WordB.refined.REF = REF_1KHZ;
@@ -26,49 +22,37 @@ SAA1057::SAA1057() {
   WordB.refined.PDM = PDM_AUTO;
   WordB.refined.BRM = BRM_ECONOMY;
   WordB.refined.T = T_LOCK_DET;
-
-  WordA.refined.N = 10000; // 100.0MHz
   WordA.refined.ADDR = ADDR_WORDA;
-
+  WordA.refined.N = 9800; // 98.0MHz
   _Freq_Shift = 0;
 }
 
 
-
 SAA1057::~SAA1057() {
-
   digitalWrite(_dlen_pin, LOW);
   digitalWrite(_clock_pin, LOW);
   digitalWrite(_data_pin, LOW);
-
   pinMode(_clock_pin, INPUT);
   pinMode(_data_pin, INPUT);
   pinMode(_dlen_pin, INPUT);
 }
 
 
-
-
 void SAA1057::begin(const uint8_t clock_pin, const uint8_t data_pin, const uint8_t dlen_pin) {
-
   _clock_pin  = clock_pin;
   _data_pin  = data_pin;
   _dlen_pin = dlen_pin;
-
   pinMode(_clock_pin, OUTPUT);
   pinMode(_data_pin, OUTPUT);
   pinMode(_dlen_pin, OUTPUT);
-
   digitalWrite(_dlen_pin, LOW);
   digitalWrite(_clock_pin, LOW);
   digitalWrite(_data_pin, LOW);
 }
 
 
-
 void SAA1057::setDipSwitchPins(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4,
-                             const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0)
-{
+                             const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0) {
   _sw_pins[7] = b7;
   _sw_pins[6] = b6;
   _sw_pins[5] = b5;
@@ -77,33 +61,22 @@ void SAA1057::setDipSwitchPins(const uint8_t b7, const uint8_t b6, const uint8_t
   _sw_pins[2] = b2;
   _sw_pins[1] = b1;
   _sw_pins[0] = b0;
-
   for (int i = 0; i < SW_COUNT; i++) pinMode(_sw_pins[i], INPUT_PULLUP);
-
 }
 
 
-
-void SAA1057::setFreqShift(float MHz)
-{
+void SAA1057::setFreqShift(float MHz) {
   _Freq_Shift = MHz;
 }
 
 
-
-
-void SAA1057::bitDelay()
-{
+void SAA1057::bitDelay() {
   delay(1);
 }
 
 
-
-
-void SAA1057::sendBit(uint16_t b)
-{
-  if (b != 0)
-  {
+void SAA1057::sendBit(uint16_t b) {
+  if (b) {
     digitalWrite(_data_pin, HIGH);
     SAA1057::bitDelay();
     digitalWrite(_clock_pin, HIGH);
@@ -111,9 +84,7 @@ void SAA1057::sendBit(uint16_t b)
     digitalWrite(_clock_pin, LOW);
     SAA1057::bitDelay();
     digitalWrite(_data_pin, LOW);
-  }
-  else
-  {
+  } else {
     digitalWrite(_data_pin, LOW);
     digitalWrite(_clock_pin, HIGH);
     SAA1057::bitDelay();
@@ -124,29 +95,20 @@ void SAA1057::sendBit(uint16_t b)
 
 
 
-void SAA1057::sendConfig(uint16_t Word)
-{
+void SAA1057::sendConfig(uint16_t Word) {
   uint16_t Word_tmp = Word;
-
   digitalWrite(_dlen_pin, HIGH);
-
   SAA1057::bitDelay();
-
   SAA1057::sendBit(0);
-
-  for (int i = 0; i < 16; i++)
-  {
+  for (int i = 0; i < 16; i++) {
     // Test bit 15
     SAA1057::sendBit(Word_tmp & 0x8000);
     Word_tmp <<= 1;
   }
-
   digitalWrite(_dlen_pin, LOW);
   SAA1057::bitDelay();
-
   digitalWrite(_clock_pin, HIGH);
   SAA1057::bitDelay();
-
   digitalWrite(_clock_pin, LOW);
   SAA1057::bitDelay();
   SAA1057::bitDelay();
@@ -154,45 +116,38 @@ void SAA1057::sendConfig(uint16_t Word)
 }
 
 
-void SAA1057::set(uint16_t Word)
-{
+void SAA1057::set(uint16_t Word) {
   if (Word & 0x8000) WordB.raw = Word;
   else WordA.raw = Word;
 }
 
 
-void SAA1057::setFrequency(float MHz, uint16_t Speed)
-{
+void SAA1057::setFrequency(float MHz, uint16_t Speed) {
   float freq;
-
   freq = MHz;
   freq += _Freq_Shift;
-
   WordA.refined.N = round(freq * 100);
   WordA.refined.ADDR = ADDR_WORDA;
-
   WordB.refined.CP = Speed;
-
   SAA1057::commitConfig();
 }
 
 
-void SAA1057::setFrequencyFromDipSwitch(uint16_t Speed)
-{
-  for (int i = 0; i < SW_COUNT; i++)
-  {
+void SAA1057::setFrequencyFromDipSwitch(uint16_t Speed) {
+  for (int i = 0; i < SW_COUNT; i++) {
     _dip_sw_value = bitWrite(_dip_sw_value, i, !digitalRead(_sw_pins[i]));
   }
-
-  // freq = 1080 - 255; // = 825
+  // freq = 1080 - 255
+  // freq = 825
+  // freq /= 10;
+  // freq = 82.5
   float freq = FACTOR - _dip_sw_value;
   freq /= 10; // = 82,5 MHz;
   SAA1057::setFrequency(freq, Speed);
 }
 
 
-void SAA1057::commitConfig()
-{
+void SAA1057::commitConfig() {
   SAA1057::sendConfig(WordB.raw);
   SAA1057::sendConfig(WordA.raw);
 }

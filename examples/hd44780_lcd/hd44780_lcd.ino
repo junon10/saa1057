@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.12
+  Version: 1.0.0.13
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Display module
@@ -9,8 +9,8 @@
 #include <LiquidCrystal.h>
 #include "SAA1057.h"
 
-const float Frequency = 100.0f;            // 100.0 MHz
-const float IntFreq = 0.0f;          //  0.0 MHz
+const float Frequency = 100.0f;      // 100.0 MHz
+const float IntFreq = 0.0f;          //   0.0 MHz
 
 // SAA1057 pins to Arduino
 const int SAA_CLOCK_PIN = 10;
@@ -59,11 +59,9 @@ void setup() {
   
   pll.setFreqShift(/* intermediate frequency in MHz */ IntFreq);
 
-  // Rated current for FM transmitters
-  //
-  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ CP_0_7MA);
+  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ SAA1057_TX_FAST_TUNE);
   delay(2000);
-  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ CP_0_07MA);
+  pll.setFrequency(/* Frequency in MHz */ Frequency, /* Phase detector current */ SAA1057_TX_SLOW_TUNE);
 
   lcd.setCursor(0,0);
   lcd.print("SAA1057 PLL");

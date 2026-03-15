@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.12
+  Version: 1.0.0.13
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
@@ -9,7 +9,7 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.12";
+const char * VERSION = "1.0.0.13";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -35,18 +35,6 @@ float Freq = 98.f; // in MHz
 // Intermediate frequency for FM receiver +10.7MHz
 //----------------------------------------------------------------
 float IntFreq = 10.7f; //  0.0 MHz
-//----------------------------------------------------------------
-
-//----------------------------------------------------------------
-// Rated current for fast tuning in FM receivers
-//----------------------------------------------------------------
-const uint16_t FAST_TUNE = CP_0_23MA;
-//----------------------------------------------------------------
-
-//----------------------------------------------------------------
-// Rated current for slow tuning in FM receivers
-//----------------------------------------------------------------
-const uint16_t SLOW_TUNE = CP_0_07MA;
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -81,7 +69,7 @@ void setup() {
 
   pll.set(WordB.raw);
   
-  commitConfig();
+  commitConfig();  
 
   delay(500);
 
@@ -94,18 +82,15 @@ void loop() {
 }
 
 
-void commitConfig()
-{
+void commitConfig() {
   pll.setFreqShift(/* Intermediate frequency in MHz */ IntFreq);
-
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ FAST_TUNE);
+  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_FAST_TUNE);
   delay(50); // time to tune in
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SLOW_TUNE);
+  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_SLOW_TUNE);
 }
 
 
-String Separator(int len)
-{
+String Separator(int len) {
   String s = "\n";
   for (int i = 0; i < len; i++) s += "-";
   s += "\n";
@@ -114,8 +99,7 @@ String Separator(int len)
 
 
 
-String getConfig() 
-{
+String getConfig() {
   String msg = "";
   msg += Separator(SEP_COUNT);
   msg += "SAA1057 PLL\nVersion: " + String(VERSION) + "\n";
@@ -126,20 +110,15 @@ String getConfig()
 }
 
 
-void handleCmd()
-{
-  if (Serial.available())
-  {
+void handleCmd() {
+  if (Serial.available()) {
     String text = Serial.readStringUntil('\n');
     text.trim();
-    
     if (text.length() == 0) {
       Serial.println(getConfig());
       return;
     }
-    
     float value = text.toFloat();
-
     if (value < MIN_FREQ) {
       IntFreq = constrain(value, MIN_INT_FREQ, MAX_INT_FREQ);
       Serial.println(getConfig());

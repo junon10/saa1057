@@ -1,6 +1,6 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.12
+  Version: 1.0.0.13
   Date: 2026/03/15
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
@@ -9,7 +9,7 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.11";
+const char * VERSION = "1.0.0.13";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -30,25 +30,13 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 // Default initial frequency
 //----------------------------------------------------------------
-float Freq = 94.1f; // 100.0 MHz
+float Freq = 98.f; // 100.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
 // Intermediate frequency for FM receiver +10.7MHz
 //----------------------------------------------------------------
 float IntFreq = 10.7f; //  0.0 MHz
-//----------------------------------------------------------------
-
-//----------------------------------------------------------------
-// Rated current for fast tuning in FM receivers
-//----------------------------------------------------------------
-const uint16_t FAST_TUNE = CP_0_23MA;
-//----------------------------------------------------------------
-
-//----------------------------------------------------------------
-// Rated current for slow tuning in FM receivers
-//----------------------------------------------------------------
-const uint16_t SLOW_TUNE = CP_0_07MA;
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -60,17 +48,12 @@ const int SAA_DLEN_PIN  = 12;
 //----------------------------------------------------------------
 
 saa1057_wordB WordB;
-
 SAA1057 pll; // PLL object declaration
 
 
 void setup() {
-
   Serial.begin(115200);
-   
-  // Arduino pins
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
-
   WordB.refined.ADDR = ADDR_WORDB;
   WordB.refined.FM = MODE_FM;
   WordB.refined.REF = REF_1KHZ;
@@ -80,9 +63,7 @@ void setup() {
   WordB.refined.PDM = PDM_AUTO;
   WordB.refined.BRM = BRM_ECONOMY;
   WordB.refined.T = T_LOCK_DET;
-
   pll.set(WordB.raw);
-  
   commitConfig();
 }
 
@@ -92,18 +73,15 @@ void loop() {
 }
 
 
-void commitConfig()
-{
+void commitConfig() {
   pll.setFreqShift(/* Intermediate frequency in MHz */ IntFreq);
-
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ FAST_TUNE);
+  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_FAST_TUNE);
   delay(50); // time to tune in
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SLOW_TUNE);
+  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_SLOW_TUNE);
 }
 
 
-String Separator(int len)
-{
+String Separator(int len) {
   String s = "\n";
   for (int i = 0; i < len; i++) s += "-";
   s += "\n";
@@ -112,8 +90,7 @@ String Separator(int len)
 
 
 
-String getCmds() 
-{
+String getCmds() {
   String msg = "";
   msg += Separator(SEP_COUNT);
   msg += "SAA1057 PLL\nVersion: " + String(VERSION) + "\n\n";
@@ -126,25 +103,20 @@ String getCmds()
 
 
 
-void changeParam(String &returned_text, const String menu_label, const String menu_index, String text, float &value, const float min_value, const float max_value,  const String unit)
-{
+void changeParam(String &returned_text, const String menu_label, const String menu_index, String text, float &value, const float min_value, const float max_value,  const String unit) {
   static int pos = 0;
   String S = "";
 
-  if (pos == 0)
-  {
+  if (pos == 0) {
     returned_text = menu_index;
     S += Separator(SEP_COUNT);
     S += "Enter the value for " + menu_label + " between " + String(min_value, 2) + unit + " and " + String(max_value, 2) + unit;
     Serial.println(S);
     pos++;
-  }
-  else
-  {
+  } else {
     float number = text.toFloat();
 
-    if ((number >= min_value) && (number <= max_value))
-    {
+    if ((number >= min_value) && (number <= max_value)) {
       value = number;
       commitConfig();
       pos = 0;
@@ -152,9 +124,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
       S += "Answer = " + String(number, 2) + unit;
       S += getCmds();
       Serial.println(S);
-    }
-    else
-    {
+    } else {
       S = "Error, the value " + String(number, 2) + unit + " is outside the acceptable range! Please try again...";
       Serial.println(S);
     }
@@ -165,29 +135,23 @@ void changeParam(String &returned_text, const String menu_label, const String me
 
 
 
-void handleCmd()
-{
+void handleCmd() {
   static String lastS = "";
   String S = "";
 
-  if (Serial.available())
-  {
+  if (Serial.available()) {
     String text = Serial.readStringUntil('\n');
-
     S = text;
 
     if (!lastS.equals("")) S = lastS;
 
-    if (S.equalsIgnoreCase(INDEX_FREQ))
-    {
+    if (S.equalsIgnoreCase(INDEX_FREQ)) {
       changeParam(lastS, MENU_TEXT_FREQ, INDEX_FREQ, text, Freq, MIN_FREQ, MAX_FREQ, "MHz");
     }
-    else if (S.equalsIgnoreCase(INDEX_INT_FREQ))
-    {
+    else if (S.equalsIgnoreCase(INDEX_INT_FREQ)) {
       changeParam(lastS, MENU_TEXT_INT_FREQ, INDEX_INT_FREQ, text, IntFreq, MIN_INT_FREQ, MAX_INT_FREQ, "MHz");
     }
-    else
-    {
+    else {
       Serial.println(getCmds());
     }
   }

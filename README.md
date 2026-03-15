@@ -59,11 +59,15 @@ void setup() {
 
   pll.set(WordB.raw);
   
-  pll.setFrequency(108.0, CP_0_07MA); // Frequency in MHz, Lock Filter Speed (current)
+  pll.setFrequency(/*Frequency in MHz*/ 108.0, /*Lock Filter Speed (charge pump current)*/ SAA1057_TX_FAST_TUNE);
+  delay(100);
+  pll.setFrequency(108.0, SAA1057_TX_SLOW_TUNE);
+  
   // or
-  pll.setFrequencyFromDipSwitch(CP_0_07MA);
-
-  pll.commitConfig();
+  
+  pll.setFrequencyFromDipSwitch(SAA1057_TX_FAST_TUNE);
+  delay(100);
+  pll.setFrequencyFromDipSwitch(SAA1057_TX_SLOW_TUNE);
 }
 
 ```
@@ -100,6 +104,7 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.10 (2026/03/14)**: Refactor.
 - **v1.0.0.11 (2026/03/15)**: Ref frequency const bug fix.
 - **v1.0.0.12 (2026/03/15)**: Another example added.
+- **v1.0.0.13 (2026/03/15)**: Charge pump constants added.
 
 ## License
 
