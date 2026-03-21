@@ -106,6 +106,7 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.12 (2026/03/15)**: Another example added.
 - **v1.0.0.13 (2026/03/15)**: Charge pump constants added.
 - **v1.0.0.14 (2026/03/15)**: Improved readability of settings.
+- **v1.0.0.15 (2026/03/20)**: Improved example.
 
 ## License
 

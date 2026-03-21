@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.14
-  Date: 2026/03/15
+  Version: 1.0.0.15
+  Date: 2026/03/20
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
   Type: With menu
@@ -9,7 +9,7 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.14";
+const char * VERSION = "1.0.0.15";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -93,7 +93,7 @@ String Separator(int len) {
 String getCmds() {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 PLL\nFIRMWARE VERSION: " + String(VERSION) + "\n\n";
+  msg += "SAA1057 PLL\nFW v" + String(VERSION) + "\n\n";
   msg += "Select an option:\n\n";
   msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
   msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz\n";
@@ -110,7 +110,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
   if (pos == 0) {
     returned_text = menu_index;
     S += Separator(SEP_COUNT);
-    S += "Enter the value for " + menu_label + " between " + String(min_value, 2) + unit + " and " + String(max_value, 2) + unit;
+    S += "Enter " + menu_label + " (" + String(min_value, 2) + unit + " - " + String(max_value, 2) + unit + " )";
     Serial.println(S);
     pos++;
   } else {
@@ -121,7 +121,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
       commitConfig();
       pos = 0;
       returned_text = "";
-      S += "Answer = " + String(number, 2) + unit;
+      S += "Response = " + String(number, 2) + unit;
       S += getCmds();
       Serial.println(S);
     } else {

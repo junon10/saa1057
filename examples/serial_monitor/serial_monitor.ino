@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.14
-  Date: 2026/03/15
+  Version: 1.0.0.15
+  Date: 2026/03/20
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
   Type: No menu
@@ -9,7 +9,7 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.14";
+const char * VERSION = "1.0.0.15";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -102,7 +102,7 @@ String Separator(int len) {
 String getConfig() {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 PLL\nFIRMWARE VERSION: " + String(VERSION) + "\n";
+  msg += "SAA1057 PLL\nFW v" + String(VERSION) + "\n";
   msg += String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
   msg += String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz";
   msg += Separator(SEP_COUNT);
