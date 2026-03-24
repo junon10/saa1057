@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.15
-  Date: 2026/03/20
+  Version: 1.0.0.16
+  Date: 2026/03/24
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
   Type: With menu
@@ -9,17 +9,17 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.15";
+const char * VERSION = "1.0.0.16";
 
 //----------------------------------------------------------------
 // Serial menu configuration
 //----------------------------------------------------------------
-const char MENU_TEXT_FREQ[] = "Frequency";
+const char MENU_TEXT_FREQ[] = "Freq";
 const char INDEX_FREQ[] = "1";
 const float MAX_FREQ = 130.f;
 const float MIN_FREQ = 50.f;
 
-const char MENU_TEXT_INT_FREQ[] = "Intermediate Frequency";
+const char MENU_TEXT_INT_FREQ[] = "IF";
 const char INDEX_INT_FREQ[] = "2";
 const float MAX_INT_FREQ = 10.7f;
 const float MIN_INT_FREQ = -10.7f;
@@ -30,7 +30,7 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 // Default initial frequency
 //----------------------------------------------------------------
-float Freq = 98.f; // 100.0 MHz
+float Freq = 98.f; // 98.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -74,10 +74,14 @@ void loop() {
 
 
 void commitConfig() {
-  pll.setFreqShift(/* Intermediate frequency in MHz */ IntFreq);
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_FAST_TUNE);
+
+  int32_t IF_KHz = (int32_t)IntFreq * 1000.f;
+  uint32_t Freq_KHz = (uint32_t)Freq_MHz * 1000.f;
+
+  pll.setFreqShift(/* Intermediate frequency in KHz */ IF_KHz);
+  pll.setFrequency(/* Frequency in KHz */ Freq_KHz, /* Phase detector current */ SAA1057_RX_FAST_TUNE);
   delay(50); // time to tune in
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_SLOW_TUNE);
+  pll.setFrequency(/* Frequency in KHz */ Freq_KHz, /* Phase detector current */ SAA1057_RX_SLOW_TUNE);
 }
 
 
@@ -121,7 +125,7 @@ void changeParam(String &returned_text, const String menu_label, const String me
       commitConfig();
       pos = 0;
       returned_text = "";
-      S += "Response = " + String(number, 2) + unit;
+      S += String(number, 2) + unit;
       S += getCmds();
       Serial.println(S);
     } else {

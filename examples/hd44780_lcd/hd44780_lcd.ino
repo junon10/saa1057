@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.15
-  Date: 2026/03/20
+  Version: 1.0.0.16
+  Date: 2026/03/24
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Display module
 */
@@ -9,8 +9,8 @@
 #include <LiquidCrystal.h>
 #include "SAA1057.h"
 
-const float Frequency = 100.0f;      // 100.0 MHz
-const float IntFreq = 0.0f;          //   0.0 MHz
+const uint32_t Frequency = 100000;  // 100000 KHz
+const int32_t IntFreq = 0;          //      0 KHz
 
 // SAA1057 pins to Arduino
 const int SAA_CLOCK_PIN = 10;
@@ -68,8 +68,8 @@ void setup() {
   
   lcd.setCursor(0,1);
   lcd.print("Freq: ");
-  lcd.print(Frequency, 1);
-  lcd.print("MHz");
+  lcd.print(Frequency, 0);
+  lcd.print("KHz");
 }
 
 

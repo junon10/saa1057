@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.15
-  Date: 2026/03/20
+  Version: 1.0.0.16
+  Date: 2026/03/24
   Author: Junon M
   Hardware: Arduino Uno or Nano, and DipSwitch
 */
@@ -11,8 +11,8 @@
 //---------------------------------------------------
 // FI adjust (intermediate frequency adjust)
 //---------------------------------------------------
-// 0.0 MHz, 10.7 MHz, -10.7 MHz
-const float IntFreq = 0.0f;
+// 0 KHz, 10700 KHz, -10700 KHz
+const int32_t IntFreq = 0;
 //---------------------------------------------------
 
 //---------------------------------------------------
@@ -52,7 +52,7 @@ void setup() {
 
   pll.set(WordB.raw);
 
-  pll.setFreqShift(/* intermediate frequency in MHz */ IntFreq);
+  pll.setFreqShift(/* intermediate frequency in KHz */ IntFreq);
 
   pll.setFrequencyFromDipSwitch(/* Phase detector current */ SAA1057_TX_FAST_TUNE);
   delay(2000);

@@ -1,7 +1,7 @@
 /*
-  Lib: SAA1057 PLL
-  Version: 1.0.0.15
-  Date: 2026/03/20
+  Lib: SAA1057 PLL (MODE_AM)
+  Version: 1.0.0.16
+  Date: 2026/03/24
   Author: Junon M
   Hardware: Arduino Uno or Nano, and Serial Monitor
   Type: No menu
@@ -9,18 +9,18 @@
 
 #include "SAA1057.h"
 
-const char * VERSION = "1.0.0.15";
+const char * VERSION = "1.0.0.16";
 
 //----------------------------------------------------------------
-// Serial menu configuration
+// Limits
 //----------------------------------------------------------------
-const char MENU_TEXT_FREQ[] = "Frequency";
-const float MAX_FREQ = 130.f;
-const float MIN_FREQ = 50.f;
+const char MENU_TEXT_FREQ[] = "Freq";
+const uint32_t MAX_FREQ = 30000; // 30MHz
+const uint32_t MIN_FREQ =   500; // 0.5MHz
 
-const char MENU_TEXT_INT_FREQ[] = "Intermediate Frequency";
-const float MAX_INT_FREQ = 10.7f;
-const float MIN_INT_FREQ = -10.7f;
+const char MENU_TEXT_INT_FREQ[] = "IF";
+const int32_t MAX_INT_FREQ = 455;
+const int32_t MIN_INT_FREQ = -455;
 
 const int SEP_COUNT = 60;
 //----------------------------------------------------------------
@@ -28,13 +28,13 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 // Default initial frequency
 //----------------------------------------------------------------
-float Freq = 98.f; // in MHz
+uint32_t Freq = 10000; // in KHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-// Intermediate frequency for FM receiver +10.7MHz
+// Intermediate frequency for FM receiver +455KHz
 //----------------------------------------------------------------
-float IntFreq = 10.7f; //  0.0 MHz
+int32_t IntFreq = 455; //  455 KHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -58,7 +58,7 @@ void setup() {
   pll.begin(SAA_CLOCK_PIN, SAA_DATA_PIN, SAA_DLEN_PIN);
 
   WordB.ADDR = ADDR_WORDB;
-  WordB.FM = MODE_FM;
+  WordB.FM = MODE_AM;
   WordB.REF = REF_1KHZ;
   WordB.CP = CP_0_23MA;
   WordB.SB2 = SB2_ON;
@@ -83,10 +83,10 @@ void loop() {
 
 
 void commitConfig() {
-  pll.setFreqShift(/* Intermediate frequency in MHz */ IntFreq);
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_FAST_TUNE);
+  pll.setFreqShift(/* Intermediate frequency in KHz */ IntFreq);
+  pll.setFrequency(/* Frequency in KHz */ Freq, /* Phase detector current */ SAA1057_RX_FAST_TUNE);
   delay(50); // time to tune in
-  pll.setFrequency(/* Frequency in MHz */ Freq, /* Phase detector current */ SAA1057_RX_SLOW_TUNE);
+  pll.setFrequency(/* Frequency in KHz */ Freq, /* Phase detector current */ SAA1057_RX_SLOW_TUNE);
 }
 
 
@@ -102,9 +102,9 @@ String Separator(int len) {
 String getConfig() {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 PLL\nFW v" + String(VERSION) + "\n";
-  msg += String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
-  msg += String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz";
+  msg += "SAA1057 AM PLL\nFW v" + String(VERSION) + "\n";
+  msg += String(MENU_TEXT_FREQ) + " = " + String(Freq, 0)  + "KHz\n";
+  msg += String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 0)  + "KHz";
   msg += Separator(SEP_COUNT);
   return msg;
 }
@@ -118,7 +118,7 @@ void handleCmd() {
       Serial.println(getConfig());
       return;
     }
-    float value = text.toFloat();
+    float value = text.toInt();
     if (value < MIN_FREQ) {
       IntFreq = constrain(value, MIN_INT_FREQ, MAX_INT_FREQ);
       Serial.println(getConfig());

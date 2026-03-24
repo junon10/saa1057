@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.15
-  Date: 2026/03/20
+  Version: 1.0.0.16
+  Date: 2026/03/24
   Author: Junon M
   License: GPLv3
 */
@@ -127,9 +127,9 @@ class SAA1057
     saa1057_wordA WordA;
     saa1057_wordB WordB;
     uint8_t _clock_pin, _data_pin, _dlen_pin;
-    uint8_t _dip_sw_value;
-    uint8_t _sw_pins[SW_COUNT];
-    float _Freq_Shift;
+    uint16_t _dip_sw_value;
+    uint16_t _sw_pins[SW_COUNT];
+    int32_t _Freq_Shift;
     void bitDelay();
     void sendBit(uint16_t b);
     void sendConfig(uint16_t Word);
@@ -138,11 +138,11 @@ class SAA1057
     SAA1057();
     virtual ~SAA1057();
     void begin(const uint8_t clock_pin, const uint8_t data_pin, const uint8_t dlen_pin);
-    void setFreqShift(float MHz);
+    void setFreqShift(int32_t KHz);
     void setDipSwitchPins(const uint8_t b7, const uint8_t b6, const uint8_t b5, const uint8_t b4,
                         const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0);
     void set(uint16_t Word);
-    void setFrequency(float MHz, uint16_t Speed);
+    void setFrequency(uint32_t KHz, uint16_t Speed);
     void setFrequencyFromDipSwitch(uint16_t Speed);
     void commitConfig();
 };

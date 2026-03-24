@@ -1,7 +1,7 @@
 /*
   Lib: SAA1057 PLL
-  Version: 1.0.0.15
-  Date: 2026/03/20
+  Version: 1.0.0.16
+  Date: 2026/03/24
   Author: Junon M
   License: GPLv3
 */
@@ -23,7 +23,7 @@ SAA1057::SAA1057() {
   WordB.BRM = BRM_ECONOMY;
   WordB.T = T_LOCK_DET;
   WordA.ADDR = ADDR_WORDA;
-  WordA.N = 9800; // 98.0MHz
+  WordA.N = 9800; // 98000 KHz
   _Freq_Shift = 0;
 }
 
@@ -65,8 +65,8 @@ void SAA1057::setDipSwitchPins(const uint8_t b7, const uint8_t b6, const uint8_t
 }
 
 
-void SAA1057::setFreqShift(float MHz) {
-  _Freq_Shift = MHz;
+void SAA1057::setFreqShift(int32_t KHz) {
+  _Freq_Shift = KHz;
 }
 
 
@@ -122,11 +122,11 @@ void SAA1057::set(uint16_t Word) {
 }
 
 
-void SAA1057::setFrequency(float MHz, uint16_t Speed) {
-  float freq;
-  freq = MHz;
+void SAA1057::setFrequency(uint32_t KHz, uint16_t Speed) {
+  uint32_t freq;
+  freq = KHz;
   freq += _Freq_Shift;
-  WordA.N = round(freq * 100);
+  WordA.N = freq / 10;
   WordA.ADDR = ADDR_WORDA;
   WordB.CP = Speed;
   SAA1057::commitConfig();
@@ -137,12 +137,21 @@ void SAA1057::setFrequencyFromDipSwitch(uint16_t Speed) {
   for (int i = 0; i < SW_COUNT; i++) {
     _dip_sw_value = bitWrite(_dip_sw_value, i, !digitalRead(_sw_pins[i]));
   }
+  
+  // MHz
   // freq = 1080 - 255
   // freq = 825
   // freq /= 10;
-  // freq = 82.5
-  float freq = FACTOR - _dip_sw_value;
-  freq /= 10; // = 82,5 MHz;
+  // freq = 82.5 MHz
+  
+  // KHz
+  // freq = 1080 - 255
+  // freq = 825
+  // freq *= 100;
+  // freq = 82500 KHz
+  
+  uint32_t freq = FACTOR - _dip_sw_value;
+  freq *= 100; // = 82500 KHz;
   SAA1057::setFrequency(freq, Speed);
 }
 

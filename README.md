@@ -107,6 +107,7 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - **v1.0.0.13 (2026/03/15)**: Charge pump constants added.
 - **v1.0.0.14 (2026/03/15)**: Improved readability of settings.
 - **v1.0.0.15 (2026/03/20)**: Improved example.
+- **v1.0.0.16 (2026/03/24)**: Change to KHz, and AM example added. 
 
 ## License
 
