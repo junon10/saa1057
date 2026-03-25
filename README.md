@@ -97,17 +97,20 @@ Contributions are welcome! Please fork the repository and send a pull request.
 
 ## Changelog
 
-- **v1.0.0.6 (2024/06/15)**: Initial commit.
-- **v1.0.0.7 (2025/01/09)**: Frequency configuration By DipSwitch integrated.
-- **v1.0.0.8 (2025/01/13)**: Fixed bug in DipSwitch decoding.
-- **v1.0.0.9 (2026/02/14)**: Small refactor.
-- **v1.0.0.10 (2026/03/14)**: Refactor.
-- **v1.0.0.11 (2026/03/15)**: Ref frequency const bug fix.
-- **v1.0.0.12 (2026/03/15)**: Another example added.
-- **v1.0.0.13 (2026/03/15)**: Charge pump constants added.
-- **v1.0.0.14 (2026/03/15)**: Improved readability of settings.
-- **v1.0.0.15 (2026/03/20)**: Improved example.
-- **v1.0.0.16 (2026/03/24)**: Change to KHz, and AM example added. 
+| Version | Date        | Changes Made               |
+|---------|-------------|---------------------------|
+| 1.0.0.6 | 2024/06/15 | Initial commit. |
+| 1.0.0.7 | 2025/01/09 | Frequency configuration from DipSwitch integrated. |
+| 1.0.0.8 | 2025/01/13 | Fixed bug in DipSwitch decoding. |
+| 1.0.0.9 | 2026/02/14 | Small refactor. |
+| 1.0.0.10 | 2026/03/14 | Refactor. |
+| 1.0.0.11 | 2026/03/15 | Ref frequency const bug fix. |
+| 1.0.0.12 | 2026/03/15 | Another example added. |
+| 1.0.0.13 | 2026/03/15 | Charge pump constants added. |
+| 1.0.0.14 | 2026/03/15 | Improved readability of settings. |
+| 1.0.0.15 | 2026/03/20 | Improved example. |
+| 1.0.0.16 | 2026/03/24 | Change to KHz, and AM example added. | 
+---
 
 ## License
 
