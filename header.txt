@@ -1,0 +1,9 @@
+/*
+ * Project: SAA1057 Arduino Library
+ * File: FILENAME_PLACEHOLDER
+ * Version: VERSION_PLACEHOLDER
+ * Date: DATE_PLACEHOLDER
+ * License: GNU GPL v3.0
+ * Developed by: Junon M. (2008-2026)
+ * Description: Embedded systems and RF signal processing.
+ */

@@ -1,15 +1,14 @@
 /*
-  Lib: SAA1057 PLL
-  Version: 1.0.0.16
-  Date: 2026/03/24
-  Author: Junon M
-  Hardware: Arduino Uno or Nano, and Serial Monitor
-  Type: With menu
-*/
+ * Project: SAA1057 Arduino Library
+ * File: serial_monitor_menu.ino
+ * Version: v1.0.0.17
+ * Date: 2026/03/29
+ * License: GNU GPL v3.0
+ * Developed by: Junon M. (2008-2026)
+ * Description: Embedded systems and RF signal processing.
+ */
 
 #include "SAA1057.h"
-
-const char * VERSION = "1.0.0.16";
 
 //----------------------------------------------------------------
 // Serial menu configuration
@@ -97,7 +96,7 @@ String Separator(int len) {
 String getCmds() {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 PLL\nFW v" + String(VERSION) + "\n\n";
+  msg += "SAA1057 PLL\n";
   msg += "Select an option:\n\n";
   msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
   msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz\n";

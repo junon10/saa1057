@@ -1,15 +1,14 @@
 /*
-  Lib: SAA1057 PLL (MODE_FM)
-  Version: 1.0.0.16
-  Date: 2026/03/24
-  Author: Junon M
-  Hardware: Arduino Uno or Nano, and Serial Monitor
-  Type: No menu
-*/
+ * Project: SAA1057 Arduino Library
+ * File: serial_monitor_fm.ino
+ * Version: v1.0.0.17
+ * Date: 2026/03/29
+ * License: GNU GPL v3.0
+ * Developed by: Junon M. (2008-2026)
+ * Description: Embedded systems and RF signal processing.
+ */
 
 #include "SAA1057.h"
-
-const char * VERSION = "1.0.0.16";
 
 //----------------------------------------------------------------
 // Limits
@@ -102,7 +101,7 @@ String Separator(int len) {
 String getConfig() {
   String msg = "";
   msg += Separator(SEP_COUNT);
-  msg += "SAA1057 FM PLL\nFW v" + String(VERSION) + "\n";
+  msg += "SAA1057 FM PLL\n";
   msg += String(MENU_TEXT_FREQ) + " = " + String(Freq, 0)  + "KHz\n";
   msg += String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 0)  + "KHz";
   msg += Separator(SEP_COUNT);

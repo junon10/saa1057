@@ -1,10 +1,12 @@
 /*
-  Lib: SAA1057 PLL
-  Version: 1.0.0.16
-  Date: 2026/03/24
-  Author: Junon M
-  Hardware: Arduino Uno or Nano, and Display module
-*/
+ * Project: SAA1057 Arduino Library
+ * File: hd44780_lcd.ino
+ * Version: v1.0.0.17
+ * Date: 2026/03/29
+ * License: GNU GPL v3.0
+ * Developed by: Junon M. (2008-2026)
+ * Description: Embedded systems and RF signal processing.
+ */
 
 #include <LiquidCrystal.h>
 #include "SAA1057.h"

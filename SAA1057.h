@@ -1,10 +1,12 @@
 /*
-  Lib: SAA1057 PLL
-  Version: 1.0.0.16
-  Date: 2026/03/24
-  Author: Junon M
-  License: GPLv3
-*/
+ * Project: SAA1057 Arduino Library
+ * File: SAA1057.h
+ * Version: v1.0.0.17
+ * Date: 2026/03/29
+ * License: GNU GPL v3.0
+ * Developed by: Junon M. (2008-2026)
+ * Description: Embedded systems and RF signal processing.
+ */
 
 #ifndef SAA1057_h
 #define SAA1057_h
