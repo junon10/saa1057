@@ -1,8 +1,8 @@
 /*
  * Project: SAA1057 Arduino Library
  * File: SAA1057.cpp
- * Version: v1.0.0.17
- * Date: 2026/03/29
+ * Version: 1.0.0.18
+ * Date: 2026/03/31
  * License: GNU GPL v3.0
  * Developed by: Junon M. (2008-2026)
  * Description: Embedded systems and RF signal processing.

@@ -95,6 +95,10 @@ Contributions are welcome! Please fork the repository and send a pull request.
 - SAA1057 Datasheet
 - Arduino Documentation
 
+## License
+
+- GPLv3
+
 ## Changelog
 
 | Version | Date        | Changes Made               |
@@ -109,10 +113,6 @@ Contributions are welcome! Please fork the repository and send a pull request.
 | 1.0.0.13 | 2026/03/15 | Charge pump constants added. |
 | 1.0.0.14 | 2026/03/15 | Improved readability of settings. |
 | 1.0.0.15 | 2026/03/20 | Improved example. |
-| 1.0.0.16 | 2026/03/24 | Change to KHz, and AM example added. | 
-
-## License
-
-- GPLv3
-
-
+| 1.0.0.16 | 2026/03/24 | Change to KHz, and AM example added. |
+| 1.0.0.17 | 2026/03/29 | Auto commit. |
+| 1.0.0.18 | 2026/03/31 | Auto commit. |
