@@ -1,8 +1,8 @@
 /*
  * Project: SAA1057 Arduino Library
  * File: serial_monitor_menu.ino
- * Version: 1.0.0.18
- * Date: 2026/03/31
+ * Version: 1.0.0.19
+ * Date: 2026/04/06
  * License: GNU GPL v3.0
  * Developed by: Junon M. (2008-2026)
  * Description: Embedded systems and RF signal processing.
@@ -29,13 +29,13 @@ const int SEP_COUNT = 60;
 //----------------------------------------------------------------
 // Default initial frequency
 //----------------------------------------------------------------
-float Freq = 98.f; // 98.0 MHz
+float Freq_MHz = 98.f; // 98.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
 // Intermediate frequency for FM receiver +10.7MHz
 //----------------------------------------------------------------
-float IntFreq = 10.7f; //  0.0 MHz
+float IntFreq_MHz = 10.7f; //  0.0 MHz
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -74,7 +74,7 @@ void loop() {
 
 void commitConfig() {
 
-  int32_t IF_KHz = (int32_t)IntFreq * 1000.f;
+  int32_t IF_KHz = (int32_t)IntFreq_MHz * 1000.f;
   uint32_t Freq_KHz = (uint32_t)Freq_MHz * 1000.f;
 
   pll.setFreqShift(/* Intermediate frequency in KHz */ IF_KHz);
@@ -98,8 +98,8 @@ String getCmds() {
   msg += Separator(SEP_COUNT);
   msg += "SAA1057 PLL\n";
   msg += "Select an option:\n\n";
-  msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq, 2)  + "MHz\n";
-  msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq, 2)  + "MHz\n";
+  msg += String(INDEX_FREQ) + ". " + String(MENU_TEXT_FREQ) + " = " + String(Freq_MHz, 2)  + "MHz\n";
+  msg += String(INDEX_INT_FREQ) + ". " + String(MENU_TEXT_INT_FREQ) + " = " + String(IntFreq_MHz, 2)  + "MHz\n";
   msg += Separator(SEP_COUNT);
   return msg;
 }
@@ -149,10 +149,10 @@ void handleCmd() {
     if (!lastS.equals("")) S = lastS;
 
     if (S.equalsIgnoreCase(INDEX_FREQ)) {
-      changeParam(lastS, MENU_TEXT_FREQ, INDEX_FREQ, text, Freq, MIN_FREQ, MAX_FREQ, "MHz");
+      changeParam(lastS, MENU_TEXT_FREQ, INDEX_FREQ, text, Freq_MHz, MIN_FREQ, MAX_FREQ, "MHz");
     }
     else if (S.equalsIgnoreCase(INDEX_INT_FREQ)) {
-      changeParam(lastS, MENU_TEXT_INT_FREQ, INDEX_INT_FREQ, text, IntFreq, MIN_INT_FREQ, MAX_INT_FREQ, "MHz");
+      changeParam(lastS, MENU_TEXT_INT_FREQ, INDEX_INT_FREQ, text, IntFreq_MHz, MIN_INT_FREQ, MAX_INT_FREQ, "MHz");
     }
     else {
       Serial.println(getCmds());
