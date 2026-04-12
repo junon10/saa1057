@@ -1,12 +1,12 @@
 /*
- * Project: SAA1057 Arduino Library
- * File: serial_monitor_menu.ino
- * Version: 1.0.0.19
- * Date: 2026/04/06
- * License: GNU GPL v3.0
- * Developed by: Junon M. (2008-2026)
- * Description: Embedded systems and RF signal processing.
- */
+ Project: SAA1057 Arduino Library
+ File: serial_monitor_menu.ino
+ Version: 1.0.0.20
+ Date: 2026/04/12
+ License: GNU GPL v3.0
+ Developed by: Junon M. (2008-2026)
+ Description: Embedded systems and RF signal processing.
+*/
 
 #include "SAA1057.h"
 
