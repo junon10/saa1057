@@ -59,9 +59,11 @@ void setup() {
 
   pll.set(WordB.raw);
   
-  pll.setFrequency(/*Frequency in MHz*/ 108.0, /*Lock Filter Speed (charge pump current)*/ SAA1057_TX_FAST_TUNE);
+  pll.setFreqShift(/* Intermediate frequency in KHz */ 10700); // +10.7MHz
+  
+  pll.setFrequency(/*Frequency in KHz*/ 108000, /*Lock Filter Speed (charge pump current)*/ SAA1057_TX_FAST_TUNE); // 108.0MHz
   delay(100);
-  pll.setFrequency(108.0, SAA1057_TX_SLOW_TUNE);
+  pll.setFrequency(108000, SAA1057_TX_SLOW_TUNE);
   
   // or
   
